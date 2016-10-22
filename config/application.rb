@@ -6,6 +6,9 @@ require 'rails/all'
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
+# Load private environment variables.
+ENV.update YAML.load_file('.env_secrets.yml')[Rails.env] rescue {}
+
 module CloudSyncService
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.
