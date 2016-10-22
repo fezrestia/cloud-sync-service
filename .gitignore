@@ -1,0 +1,30 @@
+# .gitignore for ruby-on-rails project
+
+# Ignore bundler config.
+/.bundle/
+
+# Ignore bundler gems.
+/vendor/bundle/
+
+# Ignore the default SQLite database.
+/db/*.sqlite3
+/db/*.sqlite3-journal
+
+# Ignore all log files.
+/log/*
+!/log/.keep
+
+# Ignore all tempraly files.
+/tmp/
+
+# Ignore private secretes files.
+.env_secrets.yml
+
+# Ignore unnecessary files.
+doc/
+*.swp
+*~
+.project
+.DS_Store
+.idea
+
