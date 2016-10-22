@@ -1,0 +1,2 @@
+module ZeroSimUsagesHelper
+end
