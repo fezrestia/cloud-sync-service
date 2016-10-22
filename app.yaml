@@ -4,8 +4,7 @@ vm: true
 
 # Scaling Config.
 automatic_scaling:
-  min_idle_instances: automatic
-  max_idle_instances: 1
-  min_pending_latency: 5000ms
-  max_pending_latency: automatic
+  min_num_instances: 1
+  max_num_instances: 1
+  cool_down_period_sec: 60
 
