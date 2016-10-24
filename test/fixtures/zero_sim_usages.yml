@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  year: 1
+  month: 1
+  day: 1
+  day_used: 1
+  month_used_current: 1
+
+two:
+  year: 1
+  month: 1
+  day: 1
+  day_used: 1
+  month_used_current: 1

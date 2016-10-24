@@ -1,0 +1,36 @@
+<p><strong>All Log</strong></p>
+
+<p>
+<%= link_to "Register New Log", zero_sim_usages_new_path %>
+</p>
+
+<table>
+  <tr>
+    <th>ID</th>
+    <th>Year</th>
+    <th>Month</th>
+    <th>Day</th>
+    <th>Day Used</th>
+    <th>Month Used Current</th>
+  </tr>
+
+  <% @zero_sim_usages.each do |usage| %>
+    <tr>
+      <td><%= usage.id %></td>
+      <td><%= usage.year %></td>
+      <td><%= usage.month %></td>
+      <td><%= usage.day %></td>
+      <td><%= usage.day_used %></td>
+      <td><%= usage.month_used_current %></td>
+
+      <td><%= link_to "Show", "/zero_sim_usages/#{usage.id}" %></td>
+      <td><%=
+          link_to "Delete",
+          "/zero_sim_usages/#{usage.id}",
+          method: :delete,
+          data: { confirm: "Are you sure ?" }
+      %></td>
+    </tr>
+  <% end %>
+</table>
+

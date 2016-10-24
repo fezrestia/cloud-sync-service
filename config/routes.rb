@@ -8,12 +8,11 @@ Rails.application.routes.draw do
   root 'top#index'
 
   # 0 SIM checker routes.
-  get       'zero_sim_usages'        => 'zero_sim_usages#index'
-  get       'zero_sim_usages/new'    => 'zero_sim_usages#new'
-  post      'zero_sim_usages'        => 'zero_sim_usages#create'
-  get       'zero_sim_usages/:id'    => 'zero_sim_usages#show'
-  delete    'zero_sim_usages/:id'    => 'zero_sim_usages#destroy'
-
+  get       '/zero_sim_usages'        => 'zero_sim_usages#index'
+  get       '/zero_sim_usages/new'    => 'zero_sim_usages#new'
+  post      '/zero_sim_usages'        => 'zero_sim_usages#create'
+  get       '/zero_sim_usages/:id'    => 'zero_sim_usages#show'
+  delete    '/zero_sim_usages/:id'    => 'zero_sim_usages#destroy'
 
 
   # Example of regular route:
