@@ -1,25 +1,35 @@
-# SQLite version 3.x
-#   gem install sqlite3
-#
-#   Ensure the SQLite 3 gem is defined in your Gemfile
-#   gem 'sqlite3'
-#
-default: &default
+# PostgreSQL on production environment.
+
+sqlite: &sqlite
   adapter: sqlite3
   pool: 5
   timeout: 5000
 
+postgres: &postgres
+  adapter: postgresql
+  encoding: unicode
+  pool: 5
+  timeout: 5000
+  database: cloud-sync-db
+  username: postgres
+  password: <%= ENV['POSTGRESQL_ADMIN_PASS'] %>
+  host: 146.148.110.51 # GCP PostgreSQL Server
+
 development:
-  <<: *default
+  <<: *sqlite
   database: db/development.sqlite3
 
-# Warning: The database defined as "test" will be erased and
-# re-generated from your development database when you run "rake".
-# Do not set this db to the same as development or production.
 test:
-  <<: *default
+  <<: *sqlite
   database: db/test.sqlite3
 
 production:
-  <<: *default
+#  <<: *postgres
+  <<: *sqlite
+# for DEBUG
+#  username: railsdev
+#  password: railsdev
+#  host: localhost
+# TEMP
   database: db/production.sqlite3
+

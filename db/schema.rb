@@ -13,6 +13,9 @@
 
 ActiveRecord::Schema.define(version: 20161024053653) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "zero_sim_usages", force: :cascade do |t|
     t.integer  "year"
     t.integer  "month"

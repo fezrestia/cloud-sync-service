@@ -1,4 +1,4 @@
-entrypoint: bundle exec rackup -p $PORT
+entrypoint: bundle exec rackup -p 8080 -E production config.ru
 runtime: ruby
 vm: true
 
