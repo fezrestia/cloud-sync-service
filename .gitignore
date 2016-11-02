@@ -16,6 +16,7 @@
 
 # Ignore all tempraly files.
 /tmp/
+/public/assets/
 
 # Ignore private secretes files.
 .env_secrets.yml
