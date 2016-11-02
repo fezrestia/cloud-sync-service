@@ -5,19 +5,13 @@ source 'https://rubygems.org'
 gem 'rails', '4.2.6'
 
 
-# Database for development.
-group :development do
-  gem 'sqlite3'
-  gem 'mysql2'
-end
-
-# Database for test.
-group :test do
+# SQLite3 database.
+group :development, :test do
   gem 'sqlite3'
 end
 
-# Database for production.
-group :production do
+# MySQL2 database.
+group :development, :production do
   gem 'mysql2'
 end
 
