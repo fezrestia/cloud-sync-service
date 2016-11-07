@@ -7,3 +7,7 @@ automatic_scaling:
   max_num_instances: 1
   cool_down_period_sec: 60
 
+# Network Settings.
+network:
+  instance_tag: main-engine
+
