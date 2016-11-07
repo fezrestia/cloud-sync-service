@@ -1,0 +1,7 @@
+# Cron config.
+
+cron:
+- description: ZeroSimUsage / Daily sync
+  url: /zero_sim_usages/api/sync
+  schedule: every day 12:00
+

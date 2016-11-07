@@ -13,7 +13,9 @@ Rails.application.routes.draw do
   post      '/zero_sim_usages'        => 'zero_sim_usages#create'
   get       '/zero_sim_usages/:id'    => 'zero_sim_usages#show'
   delete    '/zero_sim_usages/:id'    => 'zero_sim_usages#destroy'
-
+  # 0 SIM Usage REST APIs.
+  get       '/zero_sim_usages/api/sync',
+                to: 'zero_sim_usages#sync'
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
