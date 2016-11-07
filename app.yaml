@@ -4,7 +4,6 @@ vm: true
 
 # Scaling Config.
 automatic_scaling:
-  min_num_instances: 1
   max_num_instances: 1
   cool_down_period_sec: 60
 
