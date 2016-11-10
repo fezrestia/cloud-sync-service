@@ -8,9 +8,16 @@ mysql: &mysql
   encoding: utf8
   pool: 5
   timeout: 5000
-  username: railsapp
+
+  # 1st generation GCP Cloud SQL
+#  username: railsapp
+#  host: 173.194.245.18
+
+  # 2nd generation GCP Cloud SQL
+  username: root
+  host: 104.197.142.211
+
   password: <%= ENV['MYSQL_PASS'] %>
-  host: 173.194.245.18 # GCP CloudSQL Server
 
 development:
   <<: *sqlite
