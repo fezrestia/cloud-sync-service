@@ -1,7 +1,7 @@
 <p><strong>All Log</strong></p>
 
 <p>
-<%= link_to "Register New Log", zero_sim_usages_new_path %>
+<%= link_to "Register New Log", new_zero_sim_usage_path %>
 </p>
 
 <table>
@@ -27,10 +27,10 @@
       <td><%= usage.created_at %></td>
       <td><%= usage.updated_at %></td>
 
-      <td><%= link_to "Show", "/zero_sim_usages/#{usage.id}" %></td>
+      <td><%= link_to "Show", zero_sim_usage_path(usage.id) %></td>
       <td><%=
           link_to "Delete",
-          "/zero_sim_usages/#{usage.id}",
+          zero_sim_usage_path(usage.id),
           method: :delete,
           data: { confirm: "Are you sure ?" }
       %></td>

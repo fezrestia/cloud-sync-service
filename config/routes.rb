@@ -8,14 +8,14 @@ Rails.application.routes.draw do
   root 'top#index'
 
   # 0 SIM checker routes.
-  get       '/zero_sim_usages'        => 'zero_sim_usages#index'
-  get       '/zero_sim_usages/new'    => 'zero_sim_usages#new'
-  post      '/zero_sim_usages'        => 'zero_sim_usages#create'
-  get       '/zero_sim_usages/:id'    => 'zero_sim_usages#show'
-  delete    '/zero_sim_usages/:id'    => 'zero_sim_usages#destroy'
+  get     '/zero_sim_usages',       to: 'zero_sim_usages#index',    as: 'zero_sim_usages'
+  get     '/zero_sim_usages/new',   to: 'zero_sim_usages#new',      as: 'new_zero_sim_usage'
+  post    '/zero_sim_usages'        =>  'zero_sim_usages#create'
+  get     '/zero_sim_usages/:id',   to: 'zero_sim_usages#show',     as: 'zero_sim_usage'
+  delete  '/zero_sim_usages/:id'    =>  'zero_sim_usages#destroy'
+
   # 0 SIM Usage REST APIs.
-  get       '/zero_sim_usages/api/sync',
-                to: 'zero_sim_usages#sync'
+  get     '/zero_sim_usages/api/sync',              to: 'zero_sim_usages#sync'
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
