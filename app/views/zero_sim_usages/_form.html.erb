@@ -1,0 +1,36 @@
+<%= form_for @zero_sim_usage, url: target_url do |f| %>
+  <p>
+    <% if @zero_sim_usage.errors.any? %>
+      <div id="error_explanation">
+        <%= pluralize(@zero_sim_usage.errors.count, "error") %> occurred.<br>
+        <ul>
+        <% @zero_sim_usage.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+        </ul>
+      </div>
+    <% end %>
+  </p>
+
+  <p>
+    <%= f.label :year %>
+    <%= f.text_field :year %>
+    <br>
+    <%= f.label :month %>
+    <%= f.text_field :month %>
+    <br>
+    <%= f.label :day %>
+    <%= f.text_field :day %>
+    <br>
+    <%= f.label :day_used %>
+    <%= f.text_field :day_used %>
+    <br>
+    <%= f.label :month_used_current %>
+    <%= f.text_field :month_used_current %>
+  </p>
+
+  <p>
+    <%= f.submit %>
+  </p>
+<% end %>
+
