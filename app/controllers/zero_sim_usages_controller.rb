@@ -22,6 +22,21 @@ class ZeroSimUsagesController < ApplicationController
     @zero_sim_usage = ZeroSimUsage.find(params[:id])
   end
 
+  def edit
+    @zero_sim_usage = ZeroSimUsage.find(params[:id])
+  end
+
+  def update
+    @zero_sim_usage = ZeroSimUsage.find(params[:id])
+    if @zero_sim_usage.update_attributes(zero_sim_usage_params)
+      # Update succeeded.
+      redirect_to zero_sim_usage_path(@zero_sim_usage.id)
+    else
+      # Update failed.
+      render 'edit' # ZeroSimUsageController#edit
+    end
+  end
+
   def destroy
     @zero_sim_usage = ZeroSimUsage.find(params[:id])
     @zero_sim_usage.destroy
