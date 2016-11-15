@@ -17,6 +17,7 @@ Rails.application.routes.draw do
   delete  '/zero_sim_usages/:id'        =>  'zero_sim_usages#destroy'
 
   # 0 SIM Usage REST APIs.
+  get     '/zero_sim_usages/api/debug',             to: 'zero_sim_usages#debug'
   get     '/zero_sim_usages/api/sync',              to: 'zero_sim_usages#sync'
 
   # Example of regular route:

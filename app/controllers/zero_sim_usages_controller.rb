@@ -46,6 +46,19 @@ class ZeroSimUsagesController < ApplicationController
 
   # REST API.
   #
+  def debug
+    log_file_path = "#{Rails.root.to_s}/log/production.log"
+    ret = "DEFAULT"
+
+    File.open(log_file_path, 'r') do |file|
+      ret = file.read
+    end
+
+    render text: ret
+  end
+
+  # REST API.
+  #
   def sync
     require 'mechanize'
 
