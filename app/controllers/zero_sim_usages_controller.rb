@@ -63,74 +63,61 @@ class ZeroSimUsagesController < ApplicationController
     require 'mechanize'
 
     # Return log string.
-    ret = "API sync\n"
+    ret = "API sync<br><br>"
 
-    # Get data from so-net web.
-    agent = Mechanize.new
-    agent.user_agent_alias = 'Linux Mozilla'
-
-    #TODO: Consider server down.
-    # Login.
-    login_page = agent.get('https://www.so-net.ne.jp/retail/u/')
-    login_form = login_page.form_with(:name => 'Login')
-    login_form.IDToken1 = ENV['ZERO_SIM_NUMBER']
-    login_form.IDToken2 = ENV['ZERO_SIM_PASS']
-    # Top page.
-    top_page = agent.submit(login_form)
-    # Usage page.
-    usage_form = top_page.form_with(:name => 'userUsageActionForm')
-    usage_page = agent.submit(usage_form)
-    # Parse usage.
-    usage_list = usage_page.search('//dl[@class="useConditionDisplay"]')
-    yesterday_used_mb = usage_list.search('dd')[2].text.to_i
-    month_used_current_mb = usage_list.search('dd')[0].text.to_i
+    # Get 0 SIM stats.
+    zero_sim_stats = get_zero_sim_stats
+    yesterday_used_mb = zero_sim_stats[:yesterday_used_mb]
+    month_used_current_mb = zero_sim_stats[:month_used_current_mb]
 
     # Yesterday log.
     yesterday = Time.zone.now.yesterday
-    ret += "Yesterday = #{yesterday}\n"
+    ret += "Yesterday = #{yesterday}<br>"
     yesterday_log = ZeroSimUsage.find_by(
         year: yesterday.year,
         month: yesterday.month,
         day: yesterday.day)
     if yesterday_log.nil?
-      ret += "    New record is created.\n"
+      ret += "    New record is created.<br>"
       yesterday_log = ZeroSimUsage.new
       yesterday_log.year = yesterday.year
       yesterday_log.month = yesterday.month
       yesterday_log.day = yesterday.day
     else
-      ret += "    Record is already existing.\n"
+      ret += "    Record is already existing.<br>"
     end
     yesterday_log.day_used = yesterday_used_mb
-    ret += "    Data = #{yesterday_used_mb}\n"
+    ret += "    Data = #{yesterday_used_mb}<br>"
     if yesterday_log.save
-      ret += "    Log.save SUCCESS\n"
+      ret += "    Log.save SUCCESS<br>"
     else
-      ret += "    Log.save FAILED\n    #{yesterday_log.errors.full_messages}\n"
+      ret += "    Log.save FAILED<br>    #{yesterday_log.errors.full_messages}<br>"
     end
+
+    ret += "<br>"
 
     # Today log.
     today = Time.zone.now
-    ret += "Today = #{today}\n"
+    ret += "Today = #{today}<br>"
     today_log = ZeroSimUsage.find_by(
         year: today.year,
         month: today.month,
         day: today.day)
     if today_log.nil?
-      ret += "    New record is created.\n"
+      ret += "    New record is created.<br>"
       today_log = ZeroSimUsage.new
       today_log.year = today.year
       today_log.month = today.month
       today_log.day = today.day
     else
-      ret += "    Record is already existing.\n"
+      ret += "    Record is already existing.<br>"
     end
     today_log.month_used_current = month_used_current_mb
-    ret += "    Data = #{month_used_current_mb}\n"
+    ret += "    Data = #{month_used_current_mb}<br>"
     if today_log.save
-      ret += "    Log.save SUCCESS\n"
+      ret += "    Log.save SUCCESS<br>"
     else
-      ret += "    Log.save FAILED\n    #{today_log.errors.full_messages}\n"
+      ret += "    Log.save FAILED<br>    #{today_log.errors.full_messages}<br>"
     end
 
     # Return string.
@@ -140,6 +127,9 @@ class ZeroSimUsagesController < ApplicationController
   # REST API.
   #
   def notify
+    # Get 0 SIM stats.
+    zero_sim_stats = get_zero_sim_stats
+
     require 'net/https'
 
     uri = URI.parse("https://fcm.googleapis.com/fcm/send")
@@ -153,8 +143,8 @@ class ZeroSimUsagesController < ApplicationController
 
     payload = "{
         \"notification\": {
-            \"title\": \"HELLO WORLD !\",
-            \"text\": \"hello world !\"
+            \"title\": \"0 SIM Stats\",
+            \"text\": \"Current : #{zero_sim_stats[:month_used_current_mb]} MB/month\"
         },
         \"to\": \"dvbFOm_OuTc:APA91bGkjLfgGdrKMtVHZDWtI4dIEKnYUwzNAUqxKNmZpfzrc-aNfiiDH8Se_u_z1fEzv_z0zmhfLeSrylmLZq8tXMnyw2U1bCgGR-jX4jXMmZN7J2UTPA7qQtBp6Le76eH6GxtVmd5j\"
     }"
@@ -170,6 +160,45 @@ private
     params
         .require(:zero_sim_usage)
         .permit(:year, :month, :day, :day_used, :month_used_current)
+  end
+
+  # Get 0 SIM Stats.
+  #
+  # return hash
+  #     :yesterday_used_mb
+  #     :month_used_current_mb
+  #
+  def get_zero_sim_stats
+    # Get data from so-net web.
+    agent = Mechanize.new
+    agent.user_agent_alias = 'Linux Mozilla'
+
+    #TODO: Consider server down.
+
+    # Login.
+    login_page = agent.get('https://www.so-net.ne.jp/retail/u/')
+    login_form = login_page.form_with(:name => 'Login')
+    login_form.IDToken1 = ENV['ZERO_SIM_NUMBER']
+    login_form.IDToken2 = ENV['ZERO_SIM_PASS']
+
+    # Top page.
+    top_page = agent.submit(login_form)
+
+    # Usage page.
+    usage_form = top_page.form_with(:name => 'userUsageActionForm')
+    usage_page = agent.submit(usage_form)
+
+    # Parse usage.
+    usage_list = usage_page.search('//dl[@class="useConditionDisplay"]')
+    yesterday_used_mb = usage_list.search('dd')[2].text.to_i
+    month_used_current_mb = usage_list.search('dd')[0].text.to_i
+
+    ret = {
+        :yesterday_used_mb => usage_list.search('dd')[2].text.to_i,
+        :month_used_current_mb => usage_list.search('dd')[0].text.to_i
+    }
+
+    return ret
   end
 
 end
