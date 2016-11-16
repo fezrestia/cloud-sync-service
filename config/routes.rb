@@ -19,6 +19,7 @@ Rails.application.routes.draw do
   # 0 SIM Usage REST APIs.
   get     '/zero_sim_usages/api/debug',             to: 'zero_sim_usages#debug'
   get     '/zero_sim_usages/api/sync',              to: 'zero_sim_usages#sync'
+  get     '/zero_sim_usages/api/notify',            to: 'zero_sim_usages#notify'
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

@@ -137,6 +137,34 @@ class ZeroSimUsagesController < ApplicationController
     render text: ret
   end
 
+  # REST API.
+  #
+  def notify
+    require 'net/https'
+
+    uri = URI.parse("https://fcm.googleapis.com/fcm/send")
+    http = Net::HTTP.new(uri.host, uri.port)
+    http.use_ssl = true
+    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+    request = Net::HTTP::Post.new(uri.path)
+    request["Content-Type"] = "application/json"
+    request["Authorization"] = "key=#{ENV['FCM_TOKEN']}"
+
+    payload = "{
+        \"notification\": {
+            \"title\": \"HELLO WORLD !\",
+            \"text\": \"hello world !\"
+        },
+        \"to\": \"dvbFOm_OuTc:APA91bGkjLfgGdrKMtVHZDWtI4dIEKnYUwzNAUqxKNmZpfzrc-aNfiiDH8Se_u_z1fEzv_z0zmhfLeSrylmLZq8tXMnyw2U1bCgGR-jX4jXMmZN7J2UTPA7qQtBp6Le76eH6GxtVmd5j\"
+    }"
+    request.body = payload
+
+    response = http.request(request)
+
+    render text: "CODE : #{response.code} / MSG : #{response.message}<br><br>BODY : <br>#{response.body}"
+  end
+
 private
   def zero_sim_usage_params
     params
