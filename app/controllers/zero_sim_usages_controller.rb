@@ -2,6 +2,13 @@ class ZeroSimUsagesController < ApplicationController
 
   def index
     @zero_sim_usages = ZeroSimUsage.all
+
+    @graph_data = []
+    for log in @zero_sim_usages
+      date = "#{log.year}/#{log.month}/#{log.day}"
+      @graph_data.push(["#{date}", "#{log.month_used_current}"])
+    end
+
   end
 
   def new

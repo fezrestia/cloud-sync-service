@@ -18,6 +18,9 @@ end
 # Mechanize for web scraping.
 gem 'mechanize'
 
+# Draw graph.
+gem 'chartkick'
+
 
 
 # Use SCSS for stylesheets
