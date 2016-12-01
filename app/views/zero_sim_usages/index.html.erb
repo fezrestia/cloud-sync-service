@@ -57,11 +57,60 @@
   </p>
 
   <div>
-    <%= area_chart @graph_data,
+    <%= line_chart @graph_data,
         id: "0 SIM Log Stats",
         label: "Log",
         xtitle: "Date",
-        ytitle: "MB" %>
+        ytitle: "MB",
+        library: {
+            backgroundColor: "#EEE",
+            width: 960,
+            height: 540,
+
+            lineWidth: 1,
+            colors: ['black'],
+            curveType: 'none',
+
+            pointShape: 'circle',
+            pointSize: 0,
+            pointVisible: 'true',
+
+            chartArea: {
+              backgroundColor: "#AAA",
+              width: 870,
+              height: 380,
+              left: 60,
+              top: 30
+            },
+
+            hAxis: {
+              slantedText: 'true',
+              slantedTextAngle: 90,
+              showTextEvery: 1
+
+            },
+
+            vAxis: {
+              baseline: 500,
+              baselineColor: 'red',
+              gridlines: {
+                count: 10
+
+              },
+              ticks: [0, 50, 100, 150, 200, 250, 300, 350, 400, 450, 500, 550, 600],
+              maxValue: 600,
+              minValue: 0,
+              showTextEvery: 1
+
+            },
+
+            crosshair: {
+              color: 'green',
+              trigger: 'both'
+
+            },
+
+        } %>
   </div>
 
 </body>
