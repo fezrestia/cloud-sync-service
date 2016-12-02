@@ -1,117 +1,102 @@
-<!DOCTYPE html>
-<html lang="en">
+<p><strong>0 SIM STATS ALL LOG</strong></p>
 
-<head>
-  <meta charset="UTF-8">
-  <title>0 SIM Log Stats</title>
+<p>
+  <%= link_to "Register New Log", new_zero_sim_usage_path %>
+</p>
 
-  <!-- Graph -->
-  <%= javascript_include_tag "//www.google.com/jsapi", "chartkick" %>
+<table>
+  <tr>
+    <th>ID</th>
+    <th>Year</th>
+    <th>Month</th>
+    <th>Day</th>
+    <th>Day Used</th>
+    <th>Month Used Current</th>
+    <th>Created at</th>
+    <th>Updated at</th>
+  </tr>
 
-</head>
-
-<body>
-  <p><strong>0 SIM STATS ALL LOG</strong></p>
-
-  <p>
-    <%= link_to "Register New Log", new_zero_sim_usage_path %>
-  </p>
-
-  <table>
+  <% @zero_sim_usages.each do |usage| %>
     <tr>
-      <th>ID</th>
-      <th>Year</th>
-      <th>Month</th>
-      <th>Day</th>
-      <th>Day Used</th>
-      <th>Month Used Current</th>
-      <th>Created at</th>
-      <th>Updated at</th>
+      <td><%= usage.id %></td>
+      <td><%= usage.year %></td>
+      <td><%= usage.month %></td>
+      <td><%= usage.day %></td>
+      <td><%= usage.day_used %></td>
+      <td><%= usage.month_used_current %></td>
+      <td><%= usage.created_at %></td>
+      <td><%= usage.updated_at %></td>
+
+      <td><%= link_to "Show", zero_sim_usage_path(usage.id) %></td>
+      <td><%= link_to "Edit", edit_zero_sim_usage_path(usage.id) %></td>
+      <td><%=
+          link_to "Delete",
+          zero_sim_usage_path(usage.id),
+          method: :delete,
+          data: { confirm: "Are you sure ?" }
+      %></td>
     </tr>
+  <% end %>
+</table>
 
-    <% @zero_sim_usages.each do |usage| %>
-      <tr>
-        <td><%= usage.id %></td>
-        <td><%= usage.year %></td>
-        <td><%= usage.month %></td>
-        <td><%= usage.day %></td>
-        <td><%= usage.day_used %></td>
-        <td><%= usage.month_used_current %></td>
-        <td><%= usage.created_at %></td>
-        <td><%= usage.updated_at %></td>
+<p>
+  <%= link_to "Cloud Sync Service Root Top", root_path %>
+</p>
 
-        <td><%= link_to "Show", zero_sim_usage_path(usage.id) %></td>
-        <td><%= link_to "Edit", edit_zero_sim_usage_path(usage.id) %></td>
-        <td><%=
-            link_to "Delete",
-            zero_sim_usage_path(usage.id),
-            method: :delete,
-            data: { confirm: "Are you sure ?" }
-        %></td>
-      </tr>
-    <% end %>
-  </table>
+<div>
+  <%= line_chart @graph_data,
+      id: "0 SIM Log Stats",
+      label: "Log",
+      xtitle: "Date",
+      ytitle: "MB",
+      discrete: true,
+      library: {
+        backgroundColor: "#EEE",
+        width: 960,
+        height: 540,
 
-  <p>
-    <%= link_to "Cloud Sync Service Root Top", root_path %>
-  </p>
+        lineWidth: 1,
+        colors: ['black'],
+        curveType: 'none',
 
-  <div>
-    <%= line_chart @graph_data,
-        id: "0 SIM Log Stats",
-        label: "Log",
-        xtitle: "Date",
-        ytitle: "MB",
-        library: {
-            backgroundColor: "#EEE",
-            width: 960,
-            height: 540,
+        pointShape: 'circle',
+        pointSize: 0,
+        pointVisible: 'true',
 
-            lineWidth: 1,
-            colors: ['black'],
-            curveType: 'none',
+        chartArea: {
+          backgroundColor: "#AAA",
+          width: 870,
+          height: 380,
+          left: 60,
+          top: 30
+        },
 
-            pointShape: 'circle',
-            pointSize: 0,
-            pointVisible: 'true',
+        hAxis: {
+          slantedText: 'true',
+          slantedTextAngle: 90,
+          showTextEvery: 1
 
-            chartArea: {
-              backgroundColor: "#AAA",
-              width: 870,
-              height: 380,
-              left: 60,
-              top: 30
-            },
+        },
 
-            hAxis: {
-              slantedText: 'true',
-              slantedTextAngle: 90,
-              showTextEvery: 1
+        vAxis: {
+          baseline: 500,
+          baselineColor: 'red',
+          gridlines: {
+            count: 10
 
-            },
+          },
+          ticks: [0, 50, 100, 150, 200, 250, 300, 350, 400, 450, 500, 550, 600],
+          maxValue: 600,
+          minValue: 0,
+          showTextEvery: 1
 
-            vAxis: {
-              baseline: 500,
-              baselineColor: 'red',
-              gridlines: {
-                count: 10
+        },
 
-              },
-              ticks: [0, 50, 100, 150, 200, 250, 300, 350, 400, 450, 500, 550, 600],
-              maxValue: 600,
-              minValue: 0,
-              showTextEvery: 1
+        crosshair: {
+          color: 'green',
+          trigger: 'both'
 
-            },
-
-            crosshair: {
-              color: 'green',
-              trigger: 'both'
-
-            },
-
-        } %>
-  </div>
-
-</body>
+        },
+    } %>
+</div>
 
