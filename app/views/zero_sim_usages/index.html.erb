@@ -45,18 +45,18 @@
 
 <div>
   <%= line_chart @graph_data,
-      id: "0 SIM Log Stats",
-      label: "Log",
-      xtitle: "Date",
-      ytitle: "MB",
+      id: '0 SIM Log Stats',
+      label: 'Log',
+      xtitle: 'Date',
+      ytitle: 'MB',
       discrete: true,
       library: {
-        backgroundColor: "#EEE",
+        backgroundColor: 'aliceblue',
         width: 960,
         height: 540,
 
-        lineWidth: 1,
-        colors: ['black'],
+        lineWidth: 2,
+        colors: ['green'],
         curveType: 'none',
 
         pointShape: 'circle',
@@ -64,7 +64,7 @@
         pointVisible: 'true',
 
         chartArea: {
-          backgroundColor: "#AAA",
+          backgroundColor: 'mintcream',
           width: 870,
           height: 380,
           left: 60,
@@ -74,26 +74,32 @@
         hAxis: {
           slantedText: 'true',
           slantedTextAngle: 90,
-          showTextEvery: 1
+          showTextEvery: 1,
+          textStyle: {
+            color: 'black',
+          }
 
         },
 
         vAxis: {
           baseline: 500,
-          baselineColor: 'red',
+          baselineColor: 'orangered',
           gridlines: {
-            count: 10
+            color: 'whitesmoke'
 
           },
-          ticks: [0, 50, 100, 150, 200, 250, 300, 350, 400, 450, 500, 550, 600],
+          ticks: [0, 100, 200, 300, 400, 500, 600],
           maxValue: 600,
           minValue: 0,
-          showTextEvery: 1
+          showTextEvery: 1,
+          textStyle: {
+            color: 'black',
+          }
 
         },
 
         crosshair: {
-          color: 'green',
+          color: 'cyan',
           trigger: 'both'
 
         },
