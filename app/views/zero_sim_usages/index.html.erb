@@ -44,10 +44,12 @@
 </p>
 
 <div>
-  <%= line_chart @graph_data,
+  <%= line_chart [ {name: "2 month ago",  data: @graph_data_1},
+                   {name: "Last month",   data: @graph_data_2},
+                   {name: "Now",          data: @graph_data_3} ],
       id: '0 SIM Log Stats',
       label: 'Log',
-      xtitle: 'Date',
+      xtitle: 'Day',
       ytitle: 'MB',
       discrete: true,
       library: {
@@ -56,7 +58,7 @@
         height: 540,
 
         lineWidth: 2,
-        colors: ['green'],
+        colors: ['#FFFF7F', '#BFFFBF', '#7FFF7F'],
         curveType: 'none',
 
         pointShape: 'circle',
@@ -66,7 +68,7 @@
         chartArea: {
           backgroundColor: 'mintcream',
           width: 870,
-          height: 380,
+          height: 440,
           left: 60,
           top: 30
         },
@@ -83,7 +85,7 @@
 
         vAxis: {
           baseline: 500,
-          baselineColor: 'orangered',
+          baselineColor: '#FFBF7F',
           gridlines: {
             color: 'whitesmoke'
 
@@ -103,6 +105,13 @@
           trigger: 'both'
 
         },
+
+        legend: {
+          position: 'in',
+          alignment: 'start'
+
+        },
+
     } %>
 </div>
 

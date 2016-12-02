@@ -1,12 +1,53 @@
 class ZeroSimUsagesController < ApplicationController
 
   def index
+    # Total data.
     @zero_sim_usages = ZeroSimUsage.all
 
-    @graph_data = []
-    for log in @zero_sim_usages
-      date = "#{log.year}/#{log.month}/#{log.day}"
-      @graph_data.push(["#{date}", "#{log.month_used_current}"])
+    # Graph data.
+    latest = ZeroSimUsage.last
+    latest_year = latest.year
+    latest_month = latest.month
+
+    prev1_year = latest_year
+    prev1_month = latest_month -1
+    if prev1_month <= 0
+      prev1_year -= 1
+      prev1_month += 12
+    end
+
+    prev2_year = latest_year
+    prev2_month = latest_month -2
+    if prev2_month <= 0
+      prev2_year -= 1
+      prev2_month += 12
+    end
+
+    data_1 = ZeroSimUsage.where(
+        year: prev2_year,
+        month: prev2_month)
+    @graph_data_1 = []
+    for log in data_1
+      date = "#{log.day}"
+      @graph_data_1.push(["#{date}", "#{log.month_used_current}"])
+    end
+
+    data_2 = ZeroSimUsage.where(
+        year: prev1_year,
+        month: prev1_month)
+    @graph_data_2 = []
+    for log in data_2
+      date = "#{log.day}"
+      @graph_data_2.push(["#{date}", "#{log.month_used_current}"])
+    end
+
+    data_3 = ZeroSimUsage.where(
+        year: latest_year,
+        month: latest_month)
+    @graph_data_3 = []
+    for log in data_3
+      date = "#{log.day}"
+      @graph_data_3.push(["#{date}", "#{log.month_used_current}"])
     end
 
   end
