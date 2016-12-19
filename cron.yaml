@@ -1,12 +1,12 @@
 # Cron config.
 
 cron:
-- description: ZeroSimUsage / Daily sync
-  url: /zero_sim_usages/api/sync
-  schedule: every day 12:00
-
-- description: ZeroSimUsage / Stats Notification
-  url: /zero_sim_usages/api/notify
-  schedule: every 1 hours from 9:00 to 0:00
-  timezone: Asia/Tokyo
+#- description: ZeroSimUsage / Daily sync
+#  url: /zero_sim_usages/api/sync
+#  schedule: every day 12:00
+#
+#- description: ZeroSimUsage / Stats Notification
+#  url: /zero_sim_usages/api/notify
+#  schedule: every 1 hours from 9:00 to 0:00
+#  timezone: Asia/Tokyo
 
