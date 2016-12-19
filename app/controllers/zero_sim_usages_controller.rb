@@ -178,29 +178,12 @@ class ZeroSimUsagesController < ApplicationController
     # Get 0 SIM stats.
     zero_sim_stats = get_zero_sim_stats
 
-    require 'net/https'
+    # Do notify.
+    res = notifyToDevice(
+        "0 SIM Stats",
+        "Current : #{zero_sim_stats[:month_used_current_mb]} MB/month")
 
-    uri = URI.parse("https://fcm.googleapis.com/fcm/send")
-    http = Net::HTTP.new(uri.host, uri.port)
-    http.use_ssl = true
-    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-
-    request = Net::HTTP::Post.new(uri.path)
-    request["Content-Type"] = "application/json"
-    request["Authorization"] = "key=#{ENV['FCM_TOKEN']}"
-
-    payload = "{
-        \"notification\": {
-            \"title\": \"0 SIM Stats\",
-            \"text\": \"Current : #{zero_sim_stats[:month_used_current_mb]} MB/month\"
-        },
-        \"to\": \"dvbFOm_OuTc:APA91bGkjLfgGdrKMtVHZDWtI4dIEKnYUwzNAUqxKNmZpfzrc-aNfiiDH8Se_u_z1fEzv_z0zmhfLeSrylmLZq8tXMnyw2U1bCgGR-jX4jXMmZN7J2UTPA7qQtBp6Le76eH6GxtVmd5j\"
-    }"
-    request.body = payload
-
-    response = http.request(request)
-
-    render text: "CODE : #{response.code} / MSG : #{response.message}<br><br>BODY : <br>#{response.body}"
+    render text: "CODE : #{res.code} / MSG : #{res.message}<br><br>BODY : <br>#{res.body}"
   end
 
 private
@@ -247,6 +230,39 @@ private
     }
 
     return ret
+  end
+
+  # Request to notify device
+  #
+  # titleStr
+  #     Title string
+  # contentStr
+  #     Content string
+  #
+  def notifyToDevice(titleStr, contentStr)
+    require 'net/https'
+
+    uri = URI.parse("https://fcm.googleapis.com/fcm/send")
+    http = Net::HTTP.new(uri.host, uri.port)
+    http.use_ssl = true
+    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+    request = Net::HTTP::Post.new(uri.path)
+    request["Content-Type"] = "application/json"
+    request["Authorization"] = "key=#{ENV['FCM_TOKEN']}"
+
+    payload = "{
+        \"notification\": {
+            \"title\": \"#{titleStr}\",
+            \"text\": \"#{contentStr}\"
+        },
+        \"to\": \"dvbFOm_OuTc:APA91bGkjLfgGdrKMtVHZDWtI4dIEKnYUwzNAUqxKNmZpfzrc-aNfiiDH8Se_u_z1fEzv_z0zmhfLeSrylmLZq8tXMnyw2U1bCgGR-jX4jXMmZN7J2UTPA7qQtBp6Le76eH6GxtVmd5j\"
+    }"
+    request.body = payload
+
+    response = http.request(request)
+
+    return response
   end
 
 end
