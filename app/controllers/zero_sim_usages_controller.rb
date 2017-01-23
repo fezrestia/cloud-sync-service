@@ -6,8 +6,13 @@ class ZeroSimUsagesController < ApplicationController
 
     # Graph data.
     latest = ZeroSimUsage.last
-    latest_year = latest.year
-    latest_month = latest.month
+    if !latest.nil?
+      latest_year = latest.year
+      latest_month = latest.month
+    else
+      latest_year = 2000
+      latest_month = 1
+    end
 
     prev1_year = latest_year
     prev1_month = latest_month -1
