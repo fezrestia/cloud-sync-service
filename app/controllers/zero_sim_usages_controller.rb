@@ -104,6 +104,25 @@ class ZeroSimUsagesController < ApplicationController
 
 
 
+=begin Load log fron Firebase Data Base.
+    # Path.
+    today = Time.zone.now
+    root_path = 'https://cloud-sync-service.firebaseio.com/zero-sim-usage/logs/'
+    file_path = "y#{today.year}/m#{today.month}"
+    ext = '.json'
+    full_path = root_path + file_path + ext
+    puts "PATH=#{full_path}"
+
+    response = httpsGet(full_path)
+
+    # JSON.
+    jsonHash = JSON.load(response.body)
+
+    render text: "PATH=#{full_path} / CODE=#{response.code} / BODY=#{response.body}"
+=end
+
+
+
 =begin Dump ALL logs to Firebase Data Base.
     # Post to firebase db.
     require 'net/http'
@@ -118,9 +137,9 @@ class ZeroSimUsagesController < ApplicationController
     for log in logs
       # Path.
       root_path = 'https://cloud-sync-service.firebaseio.com/zero-sim-usage/logs/'
-      date_path = "#{log.year}/#{log.month}/#{log.day}/"
-      file_path = 'log.json'
-      full_path = root_path + date_path + file_path
+      file_path = "y#{log.year}/m#{log.month}/d#{log.day}"
+      ext = '.json'
+      full_path = root_path + file_path + ext
 
       # Data.
       data = {}
@@ -192,6 +211,11 @@ class ZeroSimUsagesController < ApplicationController
       ret += "    Log.save FAILED<br>    #{yesterday_log.errors.full_messages}<br>"
     end
 
+    # Yesterday log to Firebase.
+    y_log = getLogFromFirebase(yesterday.year, yesterday.month, yesterday.day)
+    y_log.day_used = yesterday_used_mb
+    putLog2Firebase(y_log)
+
     ret += "<br>"
 
     # Today log.
@@ -217,6 +241,11 @@ class ZeroSimUsagesController < ApplicationController
     else
       ret += "    Log.save FAILED<br>    #{today_log.errors.full_messages}<br>"
     end
+
+    # Today log to Firebase.
+    t_log = getLogFromFirebase(today.year, today.month, today.day)
+    t_log.month_used_current = month_used_current_mb
+    putLog2Firebase(t_log)
 
     # Return string.
     render text: ret
@@ -331,6 +360,77 @@ private
     response = http.request(request)
 
     return response
+  end
+
+  def httpsGet(path)
+    uri = URI.parse(path)
+    http = Net::HTTP.new(uri.host, uri.port)
+    http.use_ssl = true
+    request = Net::HTTP::Get.new(uri.request_uri)
+
+    response = http.request(request)
+
+    return response
+  end
+
+  # Put zero sim usage log to Firebase database.
+  #
+  # @log ZeroSimUsage
+  # @return Success or not.
+  #
+  def putLog2Firebase(log)
+    require 'net/http'
+    require 'uri'
+
+    # Path.
+    root_path = 'https://cloud-sync-service.firebaseio.com/zero-sim-usage/logs/'
+    file_path = "y#{log.year}/m#{log.month}/d#{log.day}"
+    ext = '.json'
+    full_path = root_path + file_path + ext
+
+    # Data.
+    data = {}
+    data['day_used'] = log.day_used
+    data['month_used_current'] = log.month_used_current
+    json = JSON.generate(data)
+
+    # HTTP.
+    response = httpsPut(full_path, json)
+
+    # Web API return.
+    if response.code == 200
+      return true
+    else
+      return false
+    end
+  end
+
+  def getLogFromFirebase(year, month, day)
+    require 'net/http'
+    require 'uri'
+
+    # Path.
+    root_path = 'https://cloud-sync-service.firebaseio.com/zero-sim-usage/logs/'
+    file_path = "y#{year}/m#{month}/d#{day}"
+    ext = '.json'
+    full_path = root_path + file_path + ext
+
+    response = httpsGet(full_path)
+
+    # JSON.
+    jsonHash = JSON.load(response.body)
+
+    # Log.
+    log = ZeroSimUsage.new
+    log.year = year
+    log.month = month
+    log.day = day
+    if !jsonHash.nil?
+      log.day_used = jsonHash['day_used']
+      log.month_used_current = jsonHash['month_used_current']
+    end
+
+    return log
   end
 
 end
