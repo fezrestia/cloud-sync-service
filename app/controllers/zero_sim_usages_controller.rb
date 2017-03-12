@@ -100,6 +100,50 @@ class ZeroSimUsagesController < ApplicationController
   # REST API.
   #
   def debug
+    render text: 'DEBUG'
+
+
+
+=begin Dump ALL logs to Firebase Data Base.
+    # Post to firebase db.
+    require 'net/http'
+    require 'uri'
+
+    # Total response.
+    ret = "RESULT:\n"
+
+    # All log.
+    logs = ZeroSimUsage.all
+
+    for log in logs
+      # Path.
+      root_path = 'https://cloud-sync-service.firebaseio.com/zero-sim-usage/logs/'
+      date_path = "#{log.year}/#{log.month}/#{log.day}/"
+      file_path = 'log.json'
+      full_path = root_path + date_path + file_path
+
+      # Data.
+      data = {}
+      data['day_used'] = log.day_used
+      data['month_used_current'] = log.month_used_current
+      json = JSON.generate(data)
+
+      # HTTP.
+      response = httpsPut(full_path, json)
+
+      # Web API return.
+      ret += "    CODE=#{response.code} / BODY=#{response.body}\n"
+    end
+
+#    render text: ret
+    render text: 'DONE'
+=end
+
+
+
+=begin
+    #### Lod production.log
+
     log_file_path = "#{Rails.root.to_s}/log/production.log"
     ret = "DEFAULT"
 
@@ -108,6 +152,7 @@ class ZeroSimUsagesController < ApplicationController
     end
 
     render text: ret
+=end
   end
 
   # REST API.
@@ -264,6 +309,24 @@ private
         \"to\": \"dvbFOm_OuTc:APA91bGkjLfgGdrKMtVHZDWtI4dIEKnYUwzNAUqxKNmZpfzrc-aNfiiDH8Se_u_z1fEzv_z0zmhfLeSrylmLZq8tXMnyw2U1bCgGR-jX4jXMmZN7J2UTPA7qQtBp6Le76eH6GxtVmd5j\"
     }"
     request.body = payload
+
+    response = http.request(request)
+
+    return response
+  end
+
+  # Submit HTTPS PUT with JSON data.
+  #
+  # @path
+  # @json
+  # @return Response of HTTPS PUT
+  #
+  def httpsPut(path, json)
+    uri = URI.parse(path)
+    http = Net::HTTP.new(uri.host, uri.port)
+    http.use_ssl = true
+    request = Net::HTTP::Put.new(uri.request_uri)
+    request.body = json
 
     response = http.request(request)
 
