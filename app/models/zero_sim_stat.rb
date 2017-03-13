@@ -1,4 +1,9 @@
 class ZeroSimStat
+  include Https
+
+  require 'net/http'
+  require 'uri'
+
   attr_reader :year, :month, :day, :day_used, :month_used_current
   attr_writer :day_used, :month_used_current
 
@@ -26,15 +31,12 @@ class ZeroSimStat
   # @return array of ZeroSimUsage
   #
   def self.getAllLogArray
-    require 'net/http'
-    require 'uri'
-
     # Path.
     ext = '.json'
     full_path = FIREBASE_DB_ROOT + ext
 
     # HTTP.
-    response = httpsGet(full_path)
+    response = Https.get(full_path)
 
     # JSON.
     json_hash = JSON.load(response.body)
@@ -66,15 +68,12 @@ class ZeroSimStat
   # @return Hash of all log.
   #
   def self.getAllLogHash
-    require 'net/http'
-    require 'uri'
-
     # Path.
     ext = '.json'
     full_path = FIREBASE_DB_ROOT + ext
 
     # HTTP.
-    response = httpsGet(full_path)
+    response = Https.get(full_path)
 
     # JSON.
     jsonHash = JSON.load(response.body)
@@ -112,15 +111,12 @@ class ZeroSimStat
   # @return ZeroSimStat
   #
   def self.get(year, month, day)
-    require 'net/http'
-    require 'uri'
-
     # Path.
     date_path = "y#{year}/m#{month}/d#{day}"
     ext = '.json'
     full_path = FIREBASE_DB_ROOT + date_path + ext
 
-    response = httpsGet(full_path)
+    response = Https.get(full_path)
 
     # JSON.
     json_hash = JSON.load(response.body)
@@ -143,9 +139,6 @@ class ZeroSimStat
   # @return Success or not.
   #
   def store
-    require 'net/http'
-    require 'uri'
-
     # Path.
     date_path = "y#{@year}/m#{@month}/d#{@day}"
     ext = '.json'
@@ -158,7 +151,7 @@ class ZeroSimStat
     json = JSON.generate(data)
 
     # HTTP.
-    response = ZeroSimStat.httpsPut(full_path, json)
+    response = Https.put(full_path, json)
 
     # Web API return.
     if response.code == 200
@@ -167,42 +160,6 @@ class ZeroSimStat
       return false
     end
   end
-
-  private
-
-    # HTTP GET.
-    #
-    # @path URI
-    # @return HttpResponse
-    #
-    def self.httpsGet(path)
-      uri = URI.parse(path)
-      http = Net::HTTP.new(uri.host, uri.port)
-      http.use_ssl = true
-      request = Net::HTTP::Get.new(uri.request_uri)
-
-      response = http.request(request)
-
-      return response
-    end
-
-    # HTTP PUT.
-    #
-    # @path URI
-    # @json
-    # @return HttpResponse
-    #
-    def self.httpsPut(path, json)
-      uri = URI.parse(path)
-      http = Net::HTTP.new(uri.host, uri.port)
-      http.use_ssl = true
-      request = Net::HTTP::Put.new(uri.request_uri)
-      request.body = json
-
-      response = http.request(request)
-
-      return response
-    end
 
 end
 

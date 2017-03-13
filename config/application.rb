@@ -24,6 +24,7 @@ module CloudSyncService
 
     # Load runner tasks.
     config.autoload_paths += %W(#{config.root}/app/lib)
+    config.autoload_paths += %W(#{config.root}/lib)
 
     # Time zone.
     config.time_zone = 'Tokyo'
