@@ -343,11 +343,18 @@ class ZeroSimUsagesController < ApplicationController
     zero_sim_stats = get_zero_sim_stats
 
     # Do notify.
-    res = notifyToDevice(
+    ret = ''
+    resm = notifyToDeviceMsg(
         "0 SIM Stats",
         "Current : #{zero_sim_stats[:month_used_current_mb]} MB/month")
+    ret += "Msg:<br>    CODE:#{resm.code}<br>    MSG:#{resm.message}<br>    BODY:#{resm.body}"
+    ret += "<br><br>"
+    resd = notifyToDeviceData(
+        {"month_used_current" => zero_sim_stats[:month_used_current_mb]})
+    ret += "Data:<br>    CODE:#{resd.code}<br>    MSG:#{resd.message}<br>    BODY:#{resd.body}"
 
-    render text: "CODE : #{res.code} / MSG : #{res.message}<br><br>BODY : <br>#{res.body}"
+    # Return string.
+    render text: ret
   end
 
 private
@@ -396,25 +403,14 @@ private
     return ret
   end
 
-  # Request to notify device
+  # Request to notify device via Notification message.
   #
-  # titleStr
-  #     Title string
-  # contentStr
-  #     Content string
+  # @titleStr Title string
+  # @contentStr Content string
+  # @data_hash Data notification key/value.
+  # @return Response
   #
-  def notifyToDevice(titleStr, contentStr)
-    require 'net/https'
-
-    uri = URI.parse("https://fcm.googleapis.com/fcm/send")
-    http = Net::HTTP.new(uri.host, uri.port)
-    http.use_ssl = true
-    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-
-    request = Net::HTTP::Post.new(uri.path)
-    request["Content-Type"] = "application/json"
-    request["Authorization"] = "key=#{ENV['FCM_TOKEN']}"
-
+  def notifyToDeviceMsg(titleStr, contentStr)
     payload = "{
         \"notification\": {
             \"title\": \"#{titleStr}\",
@@ -422,12 +418,55 @@ private
         },
         \"to\": \"dvbFOm_OuTc:APA91bGkjLfgGdrKMtVHZDWtI4dIEKnYUwzNAUqxKNmZpfzrc-aNfiiDH8Se_u_z1fEzv_z0zmhfLeSrylmLZq8tXMnyw2U1bCgGR-jX4jXMmZN7J2UTPA7qQtBp6Le76eH6GxtVmd5j\"
     }"
-    request.body = payload
 
-    response = http.request(request)
+    response = doNotify(payload)
 
     return response
   end
+
+  # Request to nofity device via Data message.
+  #
+  # @data_hash
+  # @return Response
+  #
+  def notifyToDeviceData(data_hash)
+    data_str = ''
+    for key in data_hash.keys
+      data_str += "\"#{key}\": \"#{data_hash[key]}\","
+    end
+
+    payload = "{
+        \"data\": {
+            #{data_str}
+        },
+        \"to\": \"dvbFOm_OuTc:APA91bGkjLfgGdrKMtVHZDWtI4dIEKnYUwzNAUqxKNmZpfzrc-aNfiiDH8Se_u_z1fEzv_z0zmhfLeSrylmLZq8tXMnyw2U1bCgGR-jX4jXMmZN7J2UTPA7qQtBp6Le76eH6GxtVmd5j\"
+    }"
+
+    response = doNotify(payload)
+
+    return response
+  end
+
+  private
+
+    def doNotify(payload)
+      require 'net/https'
+
+      uri = URI.parse("https://fcm.googleapis.com/fcm/send")
+      http = Net::HTTP.new(uri.host, uri.port)
+      http.use_ssl = true
+      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+      request = Net::HTTP::Post.new(uri.path)
+      request["Content-Type"] = "application/json"
+      request["Authorization"] = "key=#{ENV['FCM_TOKEN']}"
+
+      request.body = payload
+
+      response = http.request(request)
+
+      return response
+    end
 
 end
 
