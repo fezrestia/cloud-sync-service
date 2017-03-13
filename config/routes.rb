@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   root 'top#index'
 
   # 0 SIM checker routes.
+  get     '/zero_sim_stats',            to: 'zero_sim_usages#stats',    as: 'zero_sim_stats'
   get     '/zero_sim_usages',           to: 'zero_sim_usages#index',    as: 'zero_sim_usages'
   get     '/zero_sim_usages/new',       to: 'zero_sim_usages#new',      as: 'new_zero_sim_usage'
   post    '/zero_sim_usages'            =>  'zero_sim_usages#create'

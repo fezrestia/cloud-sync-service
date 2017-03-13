@@ -1,7 +1,93 @@
 class ZeroSimUsagesController < ApplicationController
 
-  def index
+  def stats
     # Total data.
+    all_log_hash = ZeroSimStat.getAllLogHash
+    @zero_sim_stats = [] # output
+    @graph_data_1 = [] # Output
+    @graph_data_2 = [] # Output
+    @graph_data_3 = [] # Output
+
+    # Parse.
+    available_years = []
+    for year in all_log_hash.keys
+      y_int = year.delete('y').to_i
+      available_years.push(y_int)
+    end
+    available_years.sort!
+    available_year_vs_month_list_hash = {}
+    for year in available_years
+      y_key = "y#{year}"
+      available_months = []
+      for month in all_log_hash[y_key].keys
+        m_int = month.delete('m').to_i
+        available_months.push(m_int)
+      end
+      available_months.sort!
+      available_year_vs_month_list_hash[year] = available_months
+    end
+
+    # Generate ZeroSimUsage list.
+    for y in available_years
+      for m in available_year_vs_month_list_hash[y]
+        start_date = Date.new(y, m, 1)
+        end_date = Date.new(y, m, -1)
+        for date in start_date..end_date
+          log = ZeroSimStat.getLogFromHash(date.year, date.month, date.day, all_log_hash)
+          if !log.day_used.nil? || !log.month_used_current.nil?
+            @zero_sim_stats.push(log)
+          end
+        end
+      end
+    end
+
+    # Graph data.
+    latest = @zero_sim_stats.last
+    if !latest.nil?
+      latest_year = latest.year
+      latest_month = latest.month
+    else
+      latest_year = 2000
+      latest_month = 1
+    end
+
+    prev1_year = latest_year
+    prev1_month = latest_month -1
+    if prev1_month <= 0
+      prev1_year -= 1
+      prev1_month += 12
+    end
+
+    prev2_year = latest_year
+    prev2_month = latest_month -2
+    if prev2_month <= 0
+      prev2_year -= 1
+      prev2_month += 12
+    end
+
+    # Graph 1.
+    for log in @zero_sim_stats
+      if (log.year == prev2_year) && (log.month == prev2_month)
+        @graph_data_1.push(["#{log.day}", "#{log.month_used_current}"])
+      end
+    end
+
+    # Graph 2.
+    for log in @zero_sim_stats
+      if (log.year == prev1_year) && (log.month == prev1_month)
+        @graph_data_2.push(["#{log.day}", "#{log.month_used_current}"])
+      end
+    end
+
+    # Graph 3.
+    for log in @zero_sim_stats
+      if (log.year == latest_year) && (log.month == latest_month)
+        @graph_data_3.push(["#{log.day}", "#{log.month_used_current}"])
+      end
+    end
+  end
+
+  def index
     @zero_sim_usages = ZeroSimUsage.all
 
     # Graph data.
@@ -54,7 +140,6 @@ class ZeroSimUsagesController < ApplicationController
       date = "#{log.day}"
       @graph_data_3.push(["#{date}", "#{log.month_used_current}"])
     end
-
   end
 
   def new
@@ -211,10 +296,10 @@ class ZeroSimUsagesController < ApplicationController
       ret += "    Log.save FAILED<br>    #{yesterday_log.errors.full_messages}<br>"
     end
 
-    # Yesterday log to Firebase.
-    y_log = getLogFromFirebase(yesterday.year, yesterday.month, yesterday.day)
+    # Yesterday log stat.
+    y_log = ZeroSimStat.get(yesterday.year, yesterday.month, yesterday.day)
     y_log.day_used = yesterday_used_mb
-    putLog2Firebase(y_log)
+    y_log.store
 
     ret += "<br>"
 
@@ -242,10 +327,10 @@ class ZeroSimUsagesController < ApplicationController
       ret += "    Log.save FAILED<br>    #{today_log.errors.full_messages}<br>"
     end
 
-    # Today log to Firebase.
-    t_log = getLogFromFirebase(today.year, today.month, today.day)
+    # Today log stat.
+    t_log = ZeroSimStat.get(today.year, today.month, today.day)
     t_log.month_used_current = month_used_current_mb
-    putLog2Firebase(t_log)
+    t_log.store
 
     # Return string.
     render text: ret
@@ -342,95 +427,6 @@ private
     response = http.request(request)
 
     return response
-  end
-
-  # Submit HTTPS PUT with JSON data.
-  #
-  # @path
-  # @json
-  # @return Response of HTTPS PUT
-  #
-  def httpsPut(path, json)
-    uri = URI.parse(path)
-    http = Net::HTTP.new(uri.host, uri.port)
-    http.use_ssl = true
-    request = Net::HTTP::Put.new(uri.request_uri)
-    request.body = json
-
-    response = http.request(request)
-
-    return response
-  end
-
-  def httpsGet(path)
-    uri = URI.parse(path)
-    http = Net::HTTP.new(uri.host, uri.port)
-    http.use_ssl = true
-    request = Net::HTTP::Get.new(uri.request_uri)
-
-    response = http.request(request)
-
-    return response
-  end
-
-  # Put zero sim usage log to Firebase database.
-  #
-  # @log ZeroSimUsage
-  # @return Success or not.
-  #
-  def putLog2Firebase(log)
-    require 'net/http'
-    require 'uri'
-
-    # Path.
-    root_path = 'https://cloud-sync-service.firebaseio.com/zero-sim-usage/logs/'
-    file_path = "y#{log.year}/m#{log.month}/d#{log.day}"
-    ext = '.json'
-    full_path = root_path + file_path + ext
-
-    # Data.
-    data = {}
-    data['day_used'] = log.day_used
-    data['month_used_current'] = log.month_used_current
-    json = JSON.generate(data)
-
-    # HTTP.
-    response = httpsPut(full_path, json)
-
-    # Web API return.
-    if response.code == 200
-      return true
-    else
-      return false
-    end
-  end
-
-  def getLogFromFirebase(year, month, day)
-    require 'net/http'
-    require 'uri'
-
-    # Path.
-    root_path = 'https://cloud-sync-service.firebaseio.com/zero-sim-usage/logs/'
-    file_path = "y#{year}/m#{month}/d#{day}"
-    ext = '.json'
-    full_path = root_path + file_path + ext
-
-    response = httpsGet(full_path)
-
-    # JSON.
-    jsonHash = JSON.load(response.body)
-
-    # Log.
-    log = ZeroSimUsage.new
-    log.year = year
-    log.month = month
-    log.day = day
-    if !jsonHash.nil?
-      log.day_used = jsonHash['day_used']
-      log.month_used_current = jsonHash['month_used_current']
-    end
-
-    return log
   end
 
 end
