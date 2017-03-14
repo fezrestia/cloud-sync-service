@@ -274,63 +274,73 @@ class ZeroSimUsagesController < ApplicationController
 
     # Yesterday log.
     yesterday = Time.zone.now.yesterday
-    ret += "Yesterday = #{yesterday}<br>"
-    yesterday_log = ZeroSimUsage.find_by(
-        year: yesterday.year,
-        month: yesterday.month,
-        day: yesterday.day)
-    if yesterday_log.nil?
-      ret += "    New record is created.<br>"
-      yesterday_log = ZeroSimUsage.new
-      yesterday_log.year = yesterday.year
-      yesterday_log.month = yesterday.month
-      yesterday_log.day = yesterday.day
-    else
-      ret += "    Record is already existing.<br>"
-    end
-    yesterday_log.day_used = yesterday_used_mb
-    ret += "    Data = #{yesterday_used_mb}<br>"
-    if yesterday_log.save
-      ret += "    Log.save SUCCESS<br>"
-    else
-      ret += "    Log.save FAILED<br>    #{yesterday_log.errors.full_messages}<br>"
-    end
+#    ret += "Yesterday = #{yesterday}<br>"
+#    yesterday_log = ZeroSimUsage.find_by(
+#        year: yesterday.year,
+#        month: yesterday.month,
+#        day: yesterday.day)
+#    if yesterday_log.nil?
+#      ret += "    New record is created.<br>"
+#      yesterday_log = ZeroSimUsage.new
+#      yesterday_log.year = yesterday.year
+#      yesterday_log.month = yesterday.month
+#      yesterday_log.day = yesterday.day
+#    else
+#      ret += "    Record is already existing.<br>"
+#    end
+#    yesterday_log.day_used = yesterday_used_mb
+#    ret += "    Data = #{yesterday_used_mb}<br>"
+#    if yesterday_log.save
+#      ret += "    Log.save SUCCESS<br>"
+#    else
+#      ret += "    Log.save FAILED<br>    #{yesterday_log.errors.full_messages}<br>"
+#    end
 
     # Yesterday log stat.
     y_log = ZeroSimStat.get(yesterday.year, yesterday.month, yesterday.day)
     y_log.day_used = yesterday_used_mb
-    y_log.store
+    is_success = y_log.store
+    if is_success
+      ret += "    Yesterday Log: SUCCESS<br>"
+    else
+      ret += "    Yesterday Log: FAILED<br>"
+    end
 
     ret += "<br>"
 
     # Today log.
     today = Time.zone.now
-    ret += "Today = #{today}<br>"
-    today_log = ZeroSimUsage.find_by(
-        year: today.year,
-        month: today.month,
-        day: today.day)
-    if today_log.nil?
-      ret += "    New record is created.<br>"
-      today_log = ZeroSimUsage.new
-      today_log.year = today.year
-      today_log.month = today.month
-      today_log.day = today.day
-    else
-      ret += "    Record is already existing.<br>"
-    end
-    today_log.month_used_current = month_used_current_mb
-    ret += "    Data = #{month_used_current_mb}<br>"
-    if today_log.save
-      ret += "    Log.save SUCCESS<br>"
-    else
-      ret += "    Log.save FAILED<br>    #{today_log.errors.full_messages}<br>"
-    end
+#    ret += "Today = #{today}<br>"
+#    today_log = ZeroSimUsage.find_by(
+#        year: today.year,
+#        month: today.month,
+#        day: today.day)
+#    if today_log.nil?
+#      ret += "    New record is created.<br>"
+#      today_log = ZeroSimUsage.new
+#      today_log.year = today.year
+#      today_log.month = today.month
+#      today_log.day = today.day
+#    else
+#      ret += "    Record is already existing.<br>"
+#    end
+#    today_log.month_used_current = month_used_current_mb
+#    ret += "    Data = #{month_used_current_mb}<br>"
+#    if today_log.save
+#      ret += "    Log.save SUCCESS<br>"
+#    else
+#      ret += "    Log.save FAILED<br>    #{today_log.errors.full_messages}<br>"
+#    end
 
     # Today log stat.
     t_log = ZeroSimStat.get(today.year, today.month, today.day)
     t_log.month_used_current = month_used_current_mb
-    t_log.store
+    is_success = t_log.store
+    if is_success
+      ret += "    Today Log: SUCCESS<br>"
+    else
+      ret += "    Today Log: FAILED<br>"
+    end
 
     # Return string.
     render text: ret

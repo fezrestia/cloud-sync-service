@@ -154,11 +154,7 @@ class ZeroSimStat
     response = Https.put(full_path, json)
 
     # Web API return.
-    if response.code == 200
-      return true
-    else
-      return false
-    end
+    return response.code == '200'
   end
 
 end

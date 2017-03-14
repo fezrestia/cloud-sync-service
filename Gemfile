@@ -10,9 +10,14 @@ group :development, :test do
   gem 'sqlite3'
 end
 
-# MySQL2 database.
+# MySQL2 database for Google Cloud SQL.
 group :development, :production do
   gem 'mysql2'
+end
+
+# PostgreSQL database for Heroku. (Not used)
+group :production do
+  gem 'pg'
 end
 
 # Mechanize for web scraping.

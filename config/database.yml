@@ -30,6 +30,10 @@ test:
   database: db/test.sqlite3
 
 production:
-  <<: *mysql
-  database: cloud-sync-database
+  adapter: postgresql
+  database: production
+#  <<: *sqlite
+#  database: db/production.sqlite3
+#  <<: *mysql
+#  database: cloud-sync-database
 
