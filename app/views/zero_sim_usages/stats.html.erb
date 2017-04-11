@@ -2,20 +2,16 @@
 
 <table>
   <tr>
-    <th>Year</th>
-    <th>Month</th>
-    <th>Day</th>
+    <th>Date</th>
     <th>Day Used</th>
     <th>Month Used Current</th>
   </tr>
 
   <% @zero_sim_stats.each do |log| %>
     <tr>
-      <td><%= log.year %></td>
-      <td><%= log.month %></td>
-      <td><%= log.day %></td>
-      <td><%= log.day_used %></td>
-      <td><%= log.month_used_current %></td>
+      <td align="left" ><%= "#{log.year}/#{log.month}/#{log.day}" %></td>
+      <td align="right" ><%= log.day_used %></td>
+      <td align="right" ><%= log.month_used_current %></td>
     </tr>
   <% end %>
 </table>
