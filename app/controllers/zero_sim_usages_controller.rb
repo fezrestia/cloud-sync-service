@@ -386,7 +386,7 @@ private
             \"title\": \"#{titleStr}\",
             \"text\": \"#{contentStr}\"
         },
-        \"to\": \"dvbFOm_OuTc:APA91bGkjLfgGdrKMtVHZDWtI4dIEKnYUwzNAUqxKNmZpfzrc-aNfiiDH8Se_u_z1fEzv_z0zmhfLeSrylmLZq8tXMnyw2U1bCgGR-jX4jXMmZN7J2UTPA7qQtBp6Le76eH6GxtVmd5j\"
+        \"to\": \"e2yNLhsTCL0:APA91bGJVoqEyzYaWMt_73qutk0yG4i36d8TG9jnAHzzTbV_gVs0GS9VidLNDViAbiJGdyXoMrBn5UQq9UHp9gpLkysPpeQ6iB75iRPpfBeAg1Tjo3tCOU2UPpmzM84GEhianM1WW3-V\"
     }"
 
     response = doNotify(payload)
@@ -409,7 +409,7 @@ private
         \"data\": {
             #{data_str}
         },
-        \"to\": \"dvbFOm_OuTc:APA91bGkjLfgGdrKMtVHZDWtI4dIEKnYUwzNAUqxKNmZpfzrc-aNfiiDH8Se_u_z1fEzv_z0zmhfLeSrylmLZq8tXMnyw2U1bCgGR-jX4jXMmZN7J2UTPA7qQtBp6Le76eH6GxtVmd5j\"
+        \"to\": \"e2yNLhsTCL0:APA91bGJVoqEyzYaWMt_73qutk0yG4i36d8TG9jnAHzzTbV_gVs0GS9VidLNDViAbiJGdyXoMrBn5UQq9UHp9gpLkysPpeQ6iB75iRPpfBeAg1Tjo3tCOU2UPpmzM84GEhianM1WW3-V\"
     }"
 
     response = doNotify(payload)
