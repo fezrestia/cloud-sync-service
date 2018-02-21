@@ -316,7 +316,9 @@ class ZeroSimUsagesController < ApplicationController
     # Payload.
     datamap = {}
     datamap["app"] = "zero-sim-stats"
-    datamap["month_used_current"] = zero_sim_stats[:month_used_current_mb]
+    datamap["zerosim_month_used_current_mb"] = zero_sim_stats[:month_used_current_mb]
+    datamap["nuro_month_used_current_mb"] = rand(0..2000) # TODO:
+    datamap["docomo_month_used_current_mb"] = rand(0..20000) # TODO:
 
     resd = notifyToDeviceData(datamap)
     ret += "Data:<br>    CODE:#{resd.code}<br>    MSG:#{resd.message}<br>    BODY:#{resd.body}"
