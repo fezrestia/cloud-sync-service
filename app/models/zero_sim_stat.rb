@@ -4,7 +4,7 @@ class ZeroSimStat
   require 'net/http'
   require 'uri'
 
-  attr_reader :year, :month, :day, :day_used, :month_used_current
+  attr_reader :year, :month, :day, :day_used, :month_used_current, :firebase_db_root
   attr_writer :day_used, :month_used_current
 
   ## Constants.
@@ -28,7 +28,7 @@ class ZeroSimStat
 
   # Get available all log.
   #
-  # @return array of ZeroSimUsage
+  # @return array of ZeroSimStats
   #
   def self.getAllLogArray
     # Path.
@@ -41,7 +41,7 @@ class ZeroSimStat
     # JSON.
     json_hash = JSON.load(response.body)
 
-    # Parse JSON to ZeroSimUsage array.
+    # Parse JSON to ZeroSimStats array.
     all_logs = []
     # Year.
     for year in json_hash.keys

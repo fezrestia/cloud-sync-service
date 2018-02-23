@@ -11,16 +11,6 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161024053653) do
-
-  create_table "zero_sim_usages", force: :cascade do |t|
-    t.integer  "year"
-    t.integer  "month"
-    t.integer  "day"
-    t.integer  "day_used"
-    t.integer  "month_used_current"
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
-  end
+ActiveRecord::Schema.define(version: 0) do
 
 end

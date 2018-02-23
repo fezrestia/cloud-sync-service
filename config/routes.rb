@@ -1,26 +1,17 @@
 Rails.application.routes.draw do
-  get 'top/index'
-
-  # The priority is based upon order of creation: first created -> highest priority.
-  # See how all your routes lay out with "rake routes".
 
   # You can have the root of your site routed with "root"
   root 'top#index'
 
-  # 0 SIM checker routes.
-  get     '/zero_sim_stats',            to: 'zero_sim_usages#stats',    as: 'zero_sim_stats'
-  get     '/zero_sim_usages',           to: 'zero_sim_usages#index',    as: 'zero_sim_usages'
-  get     '/zero_sim_usages/new',       to: 'zero_sim_usages#new',      as: 'new_zero_sim_usage'
-  post    '/zero_sim_usages'            =>  'zero_sim_usages#create'
-  get     '/zero_sim_usages/:id',       to: 'zero_sim_usages#show',     as: 'zero_sim_usage'
-  get     '/zero_sim_usages/:id/edit',  to: 'zero_sim_usages#edit',     as: 'edit_zero_sim_usage'
-  patch   '/zero_sim_usages/:id'        =>  'zero_sim_usages#update'
-  delete  '/zero_sim_usages/:id'        =>  'zero_sim_usages#destroy'
+  # Zero SIM stats.
+  get '/zero_sim_stats',  to: 'zero_sim_stats#stats',  as: 'zero_sim_stats'
 
-  # 0 SIM Usage REST APIs.
-  get     '/zero_sim_usages/api/debug',             to: 'zero_sim_usages#debug'
-  get     '/zero_sim_usages/api/sync',              to: 'zero_sim_usages#sync'
-  get     '/zero_sim_usages/api/notify',            to: 'zero_sim_usages#notify'
+  # Zero SIM stats REST APIs.
+  get '/zero_sim_stats/api/debug',   to: 'zero_sim_stats#debug'
+  get '/zero_sim_stats/api/sync',    to: 'zero_sim_stats#sync'
+  get '/zero_sim_stats/api/notify',  to: 'zero_sim_stats#notify'
+
+
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
