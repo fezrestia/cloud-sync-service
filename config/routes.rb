@@ -11,6 +11,11 @@ Rails.application.routes.draw do
   get '/zero_sim_stats/api/sync',    to: 'zero_sim_stats#sync'
   get '/zero_sim_stats/api/notify',  to: 'zero_sim_stats#notify'
 
+  # Client bridge.
+  namespace :api, { format: 'json' } do
+    post  '/client_bridge/register_fcm'
+  end
+
 
 
   # Example of regular route:

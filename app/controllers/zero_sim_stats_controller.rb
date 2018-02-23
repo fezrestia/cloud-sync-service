@@ -218,12 +218,16 @@ class ZeroSimStatsController < ApplicationController
     # @return Response
     #
     def notifyToDeviceMsg(titleStr, contentStr)
+      client_info = ClientInfo.get_primary
+      fcm_token = client_info.fcm_token
+      return nil if fcm_token.nil?
+
       payload = "{
           \"notification\": {
               \"title\": \"#{titleStr}\",
               \"text\": \"#{contentStr}\"
           },
-          \"to\": \"e2yNLhsTCL0:APA91bGJVoqEyzYaWMt_73qutk0yG4i36d8TG9jnAHzzTbV_gVs0GS9VidLNDViAbiJGdyXoMrBn5UQq9UHp9gpLkysPpeQ6iB75iRPpfBeAg1Tjo3tCOU2UPpmzM84GEhianM1WW3-V\"
+          \"to\": \"#{fcm_token}\"
       }"
 
       response = doNotify(payload)
@@ -237,6 +241,10 @@ class ZeroSimStatsController < ApplicationController
     # @return Response
     #
     def notifyToDeviceData(data_hash)
+      client_info = ClientInfo.get_primary
+      fcm_token = client_info.fcm_token
+      return nil if fcm_token.nil?
+
       data_str = ''
       for key in data_hash.keys
         data_str += "\"#{key}\": \"#{data_hash[key]}\","
@@ -246,7 +254,7 @@ class ZeroSimStatsController < ApplicationController
           \"data\": {
               #{data_str}
           },
-          \"to\": \"e2yNLhsTCL0:APA91bGJVoqEyzYaWMt_73qutk0yG4i36d8TG9jnAHzzTbV_gVs0GS9VidLNDViAbiJGdyXoMrBn5UQq9UHp9gpLkysPpeQ6iB75iRPpfBeAg1Tjo3tCOU2UPpmzM84GEhianM1WW3-V\"
+          \"to\": \"#{fcm_token}\"
       }"
 
       response = doNotify(payload)
