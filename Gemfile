@@ -17,7 +17,7 @@ end
 
 # PostgreSQL database for Heroku. (Not used)
 group :production do
-  gem 'pg'
+  gem 'pg', '~> 0.19.0'
 end
 
 # Mechanize for web scraping.
