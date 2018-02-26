@@ -11,12 +11,8 @@ module Https
       http = Net::HTTP.new(uri.host, uri.port)
       http.use_ssl = true
       request = Net::HTTP::Get.new(uri.request_uri)
-puts "## uri.host = #{uri.host}"
-puts "## uri.port = #{uri.port}"
-puts "## requ uri = #{uri.request_uri}"
-puts "## Https.get"
+
       response = http.request(request)
-puts "## Https.get done"
 
       return response
     end
