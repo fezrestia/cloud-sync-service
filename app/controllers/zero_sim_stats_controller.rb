@@ -1,4 +1,5 @@
 class ZeroSimStatsController < ApplicationController
+  include NotifyFcm
 
   def stats
     # Total data.
@@ -147,7 +148,7 @@ class ZeroSimStatsController < ApplicationController
     # Do notify.
     ret = ''
 # Disable remote notification.
-#    resm = notifyToDeviceMsg(
+#    resm = NotifyFcm.notifyToDeviceMsg(
 #        "0 SIM Stats",
 #        "Current : #{zero_sim_stats[:month_used_current_mb]} MB/month")
 #    ret += "Msg:<br>    CODE:#{resm.code}<br>    MSG:#{resm.message}<br>    BODY:#{resm.body}"
@@ -160,7 +161,7 @@ class ZeroSimStatsController < ApplicationController
     datamap["nuro_month_used_current_mb"] = rand(0..2000) # TODO:
     datamap["docomo_month_used_current_mb"] = rand(0..20000) # TODO:
 
-    resd = notifyToDeviceData(datamap)
+    resd = NotifyFcm.notifyToDeviceData(datamap)
     ret += "Data:<br>    CODE:#{resd.code}<br>    MSG:#{resd.message}<br>    BODY:#{resd.body}"
 
     # Return string.
@@ -210,76 +211,7 @@ class ZeroSimStatsController < ApplicationController
       return ret
     end
 
-    # Request to notify device via Notification message.
-    #
-    # @titleStr Title string
-    # @contentStr Content string
-    # @data_hash Data notification key/value.
-    # @return Response
-    #
-    def notifyToDeviceMsg(titleStr, contentStr)
-      client_info = ClientInfo.get_primary
-      fcm_token = client_info.fcm_token
-      return nil if fcm_token.nil?
-
-      payload = "{
-          \"notification\": {
-              \"title\": \"#{titleStr}\",
-              \"text\": \"#{contentStr}\"
-          },
-          \"to\": \"#{fcm_token}\"
-      }"
-
-      response = doNotify(payload)
-
-      return response
-    end
-
-    # Request to nofity device via Data message.
-    #
-    # @data_hash
-    # @return Response
-    #
-    def notifyToDeviceData(data_hash)
-      client_info = ClientInfo.get_primary
-      fcm_token = client_info.fcm_token
-      return nil if fcm_token.nil?
-
-      data_str = ''
-      for key in data_hash.keys
-        data_str += "\"#{key}\": \"#{data_hash[key]}\","
-      end
-
-      payload = "{
-          \"data\": {
-              #{data_str}
-          },
-          \"to\": \"#{fcm_token}\"
-      }"
-
-      response = doNotify(payload)
-
-      return response
-    end
-
-    def doNotify(payload)
-      require 'net/https'
-
-      uri = URI.parse("https://fcm.googleapis.com/fcm/send")
-      http = Net::HTTP.new(uri.host, uri.port)
-      http.use_ssl = true
-      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-
-      request = Net::HTTP::Post.new(uri.path)
-      request["Content-Type"] = "application/json"
-      request["Authorization"] = "key=#{ENV['FCM_TOKEN']}"
-
-      request.body = payload
-
-      response = http.request(request)
-
-      return response
-    end
+  # private
 
 end
 
