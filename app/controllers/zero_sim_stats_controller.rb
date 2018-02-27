@@ -3,44 +3,16 @@ class ZeroSimStatsController < ApplicationController
 
   def stats
     # Total data.
-    all_log_hash = ZeroSimStat.getAllLogHash
-    @zero_sim_stats = [] # output
-    @graph_data_1 = [] # Output
-    @graph_data_2 = [] # Output
-    @graph_data_3 = [] # Output
+    @zero_sim_stats = ZeroSimStat.getAllLogArray
 
-    # Parse.
-    available_years = []
-    for year in all_log_hash.keys
-      y_int = year.delete('y').to_i
-      available_years.push(y_int)
-    end
-    available_years.sort!
-    available_year_vs_month_list_hash = {}
-    for year in available_years
-      y_key = "y#{year}"
-      available_months = []
-      for month in all_log_hash[y_key].keys
-        m_int = month.delete('m').to_i
-        available_months.push(m_int)
-      end
-      available_months.sort!
-      available_year_vs_month_list_hash[year] = available_months
-    end
+    @graph_data_1 = []
+    @graph_data_2 = []
+    @graph_data_3 = []
 
-    # Generate ZeroSimStats list.
-    for y in available_years
-      for m in available_year_vs_month_list_hash[y]
-        start_date = Date.new(y, m, 1)
-        end_date = Date.new(y, m, -1)
-        for date in start_date..end_date
-          log = ZeroSimStat.getLogFromHash(date.year, date.month, date.day, all_log_hash)
-          if !log.day_used.nil? || !log.month_used_current.nil?
-            @zero_sim_stats.push(log)
-          end
-        end
-      end
-    end
+    # Sort year/month/day data.
+    @zero_sim_stats.sort_by! { |log| log.day }
+    @zero_sim_stats.sort_by! { |log| log.month }
+    @zero_sim_stats.sort_by! { |log| log.year }
 
     # Graph data.
     latest = @zero_sim_stats.last
@@ -67,25 +39,17 @@ class ZeroSimStatsController < ApplicationController
     end
 
     # Graph 1.
-    for log in @zero_sim_stats
-      if (log.year == prev2_year) && (log.month == prev2_month)
-        @graph_data_1.push(["#{log.day}", "#{log.month_used_current}"])
-      end
-    end
+    logs_1 = @zero_sim_stats.select { |log| (log.year == prev2_year) && (log.month == prev2_month) }
+    @graph_data_1 = logs_1.map { |log| ["#{log.day}", "#{log.month_used_current}"] }
 
     # Graph 2.
-    for log in @zero_sim_stats
-      if (log.year == prev1_year) && (log.month == prev1_month)
-        @graph_data_2.push(["#{log.day}", "#{log.month_used_current}"])
-      end
-    end
+    logs_2 = @zero_sim_stats.select { |log| (log.year == prev1_year) && (log.month == prev1_month) }
+    @graph_data_2 = logs_2.map { |log| ["#{log.day}", "#{log.month_used_current}"] }
 
     # Graph 3.
-    for log in @zero_sim_stats
-      if (log.year == latest_year) && (log.month == latest_month)
-        @graph_data_3.push(["#{log.day}", "#{log.month_used_current}"])
-      end
-    end
+    logs_3 = @zero_sim_stats.select { |log| (log.year == latest_year) && (log.month == latest_month) }
+    @graph_data_3 = logs_3.map { |log| ["#{log.day}", "#{log.month_used_current}"] }
+
   end
 
   # REST API.
