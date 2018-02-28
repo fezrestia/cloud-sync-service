@@ -26,6 +26,13 @@ class SimStatBase
     @month_used_current = month_used_current
   end
 
+  # Return string for log.
+  #
+  # @return String Log string.
+  def to_s
+    return "SimStat: #{@year}/#{@month}/#{@day}, day_used=#{@day_used}, month_used_current=#{@month_used_current}"
+  end
+
   # MUST override
   def get_firebase_db_root
     raise 'Not implemented.'
