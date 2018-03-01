@@ -16,6 +16,12 @@ Rails.application.routes.draw do
   get '/dcm_sim_stats/api/sync',    to: 'dcm_sim_stats#sync'
   get '/dcm_sim_stats/api/notify',  to: 'dcm_sim_stats#notify'
 
+  # Nuro SIM stats REST APIs.
+  get '/nuro_sim_stats',            to: 'nuro_sim_stats#stats',   as: 'nuro_sim_stats'
+  get '/nuro_sim_stats/api/debug',  to: 'nuro_sim_stats#debug'
+  get '/nuro_sim_stats/api/sync',   to: 'nuro_sim_stats#sync'
+  get '/nuro_sim_stats/api/notify', to: 'nuro_sim_stats#notify'
+
   # Client bridge.
   namespace :api, { format: 'json' } do
     post  '/client_bridge/register_fcm'
