@@ -79,11 +79,18 @@ class SimStatBase
 
   # Get 1 log.
   #
+  # @date Date
+  # @return SimStatBase
+  def self.get(date)
+    return get(date.year, date.month, date.day)
+  end
+
+  # Get 1 log.
+  #
   # @year
   # @month
   # @day
   # @return SimStatBase
-  #
   def self.get(year, month, day)
     # Path.
     date_path = "y#{year}/m#{month}/d#{day}"

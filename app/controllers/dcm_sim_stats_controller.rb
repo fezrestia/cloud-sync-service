@@ -14,31 +14,52 @@ class DcmSimStatsController < ApplicationController
   # REST API.
   #
   def sync
+    # Response JSON.
+    res = {}
+
     # Access to DCM server.
-    status, month, yesterday = get_dcm_sim_stats
+    status, month_used, yesterday_used = get_dcm_sim_stats
+    res['is_sync_success'] = status
 
-
-
-
-
-    # Return string.
     if status
-      res = "Status = OK\n"
-    else
-      res = "Status = NG\n"
-    end
-    res += "Month = #{month}\n"
-    res += "Yesterday = #{yesterday}\n"
+      # Yesterday log.
+      yesterday = Time.zone.now.yesterday
+      y_log = DcmSimStat.get(yesterday.year, yesterday.month, yesterday.day)
+      y_log.day_used = yesterday_used
+      res['is_yesterday_store_success'] = y_log.store
 
-    render plain: res
+      # Today log.
+      today = Time.zone.now
+      t_log = DcmSimStat.get(today.year, today.month, today.day)
+      t_log.month_used_current = month_used
+      res['is_month_store_success'] = t_log.store
+    end
+
+    # Return JSON.
+    render json: res
   end
 
   # REST API.
   #
   def notify
+    # Today log.
+    t_log = DcmSimStat.get(Time.zone.now)
 
+    # Response JSON.
+    res = {}
 
+    # Payload.
+    datamap = {}
+    datamap["app"] = "sim-stats"
+    datamap["dcm_month_used_current_mb"] = t_log.month_used_current
 
+    datares = NotifyFcm.notifyToDeviceData(datamap)
+    res['code'] = datares.code
+    res['message'] = datares.message
+    res['body'] = datares.body
+
+    # Return JSON.
+    render json: res
   end
 
   private
@@ -145,7 +166,7 @@ class DcmSimStatsController < ApplicationController
       puts "## Month Used Current = #{month_used_current} GB"
       puts "## Yesterday Used = #{yesterday_used} GB"
 
-      return is_success,  month_used_current, yesterday_used
+      return is_success, month_used_current, yesterday_used
     end
 
     MAX_PARSE_RETRY_COUNT = 3

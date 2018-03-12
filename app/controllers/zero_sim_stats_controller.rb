@@ -61,19 +61,11 @@ class ZeroSimStatsController < ApplicationController
 
     # Do notify.
     ret = ''
-# Disable remote notification.
-#    resm = NotifyFcm.notifyToDeviceMsg(
-#        "0 SIM Stats",
-#        "Current : #{zero_sim_stats[:month_used_current_mb]} MB/month")
-#    ret += "Msg:<br>    CODE:#{resm.code}<br>    MSG:#{resm.message}<br>    BODY:#{resm.body}"
-#    ret += "<br><br>"
 
     # Payload.
     datamap = {}
     datamap["app"] = "zero-sim-stats"
     datamap["zerosim_month_used_current_mb"] = zero_sim_stats[:month_used_current_mb]
-    datamap["nuro_month_used_current_mb"] = rand(0..2000) # TODO:
-    datamap["docomo_month_used_current_mb"] = rand(0..20000) # TODO:
 
     resd = NotifyFcm.notifyToDeviceData(datamap)
     ret += "Data:<br>    CODE:#{resd.code}<br>    MSG:#{resd.message}<br>    BODY:#{resd.body}"
