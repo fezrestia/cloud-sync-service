@@ -28,6 +28,10 @@ gem 'chartkick'
 
 gem 'rails-ujs'
 
+# AJAX web scraping.
+gem 'capybara'
+gem 'poltergeist'
+
 
 
 # Use SCSS for stylesheets
