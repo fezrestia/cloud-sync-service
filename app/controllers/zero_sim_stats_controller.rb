@@ -64,7 +64,7 @@ class ZeroSimStatsController < ApplicationController
 
     # Payload.
     datamap = {}
-    datamap["app"] = "zero-sim-stats"
+    datamap["app"] = "sim-stats"
     datamap["zerosim_month_used_current_mb"] = zero_sim_stats[:month_used_current_mb]
 
     resd = NotifyFcm.notifyToDeviceData(datamap)

@@ -32,6 +32,9 @@ gem 'rails-ujs'
 gem 'capybara'
 gem 'poltergeist'
 
+# Add log.
+gem 'rails_12factor'
+
 
 
 # Use SCSS for stylesheets
