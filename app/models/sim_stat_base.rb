@@ -81,7 +81,7 @@ class SimStatBase
   #
   # @date Date
   # @return SimStatBase
-  def self.get(date)
+  def self.get_from_date(date)
     return get(date.year, date.month, date.day)
   end
 

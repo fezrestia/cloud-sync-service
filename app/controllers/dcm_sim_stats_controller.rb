@@ -43,7 +43,7 @@ class DcmSimStatsController < ApplicationController
   #
   def notify
     # Today log.
-    t_log = DcmSimStat.get(Time.zone.now)
+    t_log = DcmSimStat.get_from_date(Time.zone.now)
 
     # Response JSON.
     res = {}
