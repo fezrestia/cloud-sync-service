@@ -14,11 +14,25 @@ class NuroSimStatsController < ApplicationController
   # REST API.
   #
   def sync
+    # Response JSON.
+    res = {}
+
+    res['is_sync_success'] = false
+
+    # Return JSON.
+    render json: res
   end
 
   # REST API.
   #
   def notify
+    # Response JSON.
+    res = {}
+
+    res['code'] = 200
+
+    # Return JSON.
+    render json: res
   end
 
   private
