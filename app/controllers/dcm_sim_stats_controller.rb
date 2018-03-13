@@ -23,14 +23,12 @@ class DcmSimStatsController < ApplicationController
 
     if status
       # Yesterday log.
-      yesterday = Time.zone.now.yesterday
-      y_log = DcmSimStat.get(yesterday.year, yesterday.month, yesterday.day)
+      y_log = DcmSimStat.get_from_date(Time.zone.now.yesterday)
       y_log.day_used = yesterday_used
       res['is_yesterday_store_success'] = y_log.store
 
       # Today log.
-      today = Time.zone.now
-      t_log = DcmSimStat.get(today.year, today.month, today.day)
+      t_log = DcmSimStat.get_from_date(Time.zone.now)
       t_log.month_used_current = month_used
       res['is_month_store_success'] = t_log.store
     end

@@ -26,8 +26,7 @@ class ZeroSimStatsController < ApplicationController
     month_used_current_mb = zero_sim_stats[:month_used_current_mb]
 
     # Yesterday log.
-    yesterday = Time.zone.now.yesterday
-    y_log = ZeroSimStat.get(yesterday.year, yesterday.month, yesterday.day)
+    y_log = ZeroSimStat.get_from_date(Time.zone.now.yesterday)
     y_log.day_used = yesterday_used_mb
     is_success = y_log.store
     if is_success
@@ -39,8 +38,7 @@ class ZeroSimStatsController < ApplicationController
     ret += "<br>"
 
     # Today log.
-    today = Time.zone.now
-    t_log = ZeroSimStat.get(today.year, today.month, today.day)
+    t_log = ZeroSimStat.get_from_date(Time.zone.now)
     t_log.month_used_current = month_used_current_mb
     is_success = t_log.store
     if is_success
