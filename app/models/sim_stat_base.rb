@@ -10,6 +10,8 @@ class SimStatBase
   attr_reader :year, :month, :day, :day_used, :month_used_current, :firebase_db_root
   attr_writer :day_used, :month_used_current
 
+  INVALID_VALUE = -1
+
   # CONSTRUCTOR
   #
   # @year
@@ -109,6 +111,9 @@ class SimStatBase
       day_used = json_hash['day_used']
       month_used_current = json_hash['month_used_current']
     end
+    day_used = INVALID_VALUE if day_used.blank?
+    month_used_current = INVALID_VALUE if month_used_current.blank?
+
     log = create_instance(year, month, day, day_used, month_used_current)
 
     return log
