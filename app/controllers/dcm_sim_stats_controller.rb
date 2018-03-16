@@ -164,6 +164,10 @@ class DcmSimStatsController < ApplicationController
       puts "## Month Used Current = #{month_used_current} GB"
       puts "## Yesterday Used = #{yesterday_used} GB"
 
+      # Convert from GB to MB.
+      month_used_current = ((month_used_current.to_f) * 1000).to_i
+      yesterday_used = ((yesterday_used.to_f) * 1000).to_i
+
       return is_success, month_used_current, yesterday_used
     end
 
