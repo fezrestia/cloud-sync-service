@@ -57,16 +57,28 @@ class ZeroSimStatsController < ApplicationController
     # Get 0 SIM stats.
     zero_sim_stats = get_zero_sim_stats
 
-    # Do notify.
-    ret = ''
-
     # Payload.
     datamap = {}
     datamap["app"] = "sim-stats"
     datamap["zerosim_month_used_current_mb"] = zero_sim_stats[:month_used_current_mb]
 
     resd = NotifyFcm.notifyToDeviceData(datamap)
-    ret += "Data:<br>    CODE:#{resd.code}<br>    MSG:#{resd.message}<br>    BODY:#{resd.body}"
+
+    code = resd.nil? ? 'N/A' : resd.code
+    message = resd.nil? ? 'N/A' : resd.message
+    body = resd.nil? ? 'N/A' : resd.body
+
+    ret = <<-"RET"
+<pre>
+API: notify
+
+DATA: #{datamap}
+
+CODE: #{code}
+MSG: #{message}
+BODY: #{body}
+</pre>
+    RET
 
     # Return string.
     render text: ret

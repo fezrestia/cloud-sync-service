@@ -43,21 +43,31 @@ class NuroSimStatsController < ApplicationController
     # Today log.
     t_log = NuroSimStat.get_from_date(Time.zone.now)
 
-    # Response JSON.
-    res = {}
-
     # Payload.
     datamap = {}
     datamap["app"] = "sim-stats"
     datamap["nuro_month_used_current_mb"] = t_log.month_used_current
 
     datares = NotifyFcm.notifyToDeviceData(datamap)
-    res['code'] = datares.code
-    res['message'] = datares.message
-    res['body'] = datares.body
+
+    code = datares.nil? ? 'N/A' : datares.code
+    message = datares.nil? ? 'N/A' : datares.message
+    body = datares.nil? ? 'N/A' : datares.body
+
+    ret = <<-"RET"
+<pre>
+API: notify
+
+DATA: #{datamap}
+
+CODE: #{code}
+MSG: #{message}
+BODY: #{body}
+</pre>
+    RET
 
     # Return JSON.
-    render json: res
+    render text: ret
   end
 
   private
