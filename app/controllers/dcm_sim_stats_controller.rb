@@ -21,52 +21,23 @@ class DcmSimStatsController < ApplicationController
     status, month_used, yesterday_used = get_dcm_sim_stats
     res['is_sync_success'] = status
 
-    if status
-      # Yesterday log.
-      y_log = DcmSimStat.get_from_date(Time.zone.now.yesterday)
-      y_log.day_used = yesterday_used
-      res['is_yesterday_store_success'] = y_log.store
+    # Store.
+    is_y_ok, is_m_ok = store_sync_data(DcmSimStat, yesterday_used, month_used)
+    res['is_yesterday_store_success'] = is_y_ok
+    res['is_month_store_success'] = is_m_ok
 
-      # Today log.
-      t_log = DcmSimStat.get_from_date(Time.zone.now)
-      t_log.month_used_current = month_used
-      res['is_month_store_success'] = t_log.store
-    end
-
-    # Return JSON.
-    render json: res
+    # Render HTML.
+    html = get_sync_result(res)
+    render text: html
   end
 
   # REST API.
   #
   def notify
-    # Today log.
-    t_log = DcmSimStat.get_from_date(Time.zone.now)
+    payload, code, msg, body = notify_latest_data(DcmSimStat, "dcm")
 
-    # Payload.
-    datamap = {}
-    datamap["app"] = "sim-stats"
-    datamap["dcm_month_used_current_mb"] = t_log.month_used_current
-
-    datares = NotifyFcm.notifyToDeviceData(datamap)
-
-    code = datares.nil? ? 'N/A' : datares.code
-    message = datares.nil? ? 'N/A' : datares.message
-    body = datares.nil? ? 'N/A' : datares.body
-
-    ret = <<-"RET"
-<pre>
-API: notify
-
-DATA: #{datamap}
-
-CODE: #{code}
-MSG: #{message}
-BODY: #{body}
-</pre>
-    RET
-
-    # Return JSON.
+    # Render HTML
+    ret = get_notify_result(payload, code, msg, body)
     render text: ret
   end
 

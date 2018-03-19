@@ -17,70 +17,32 @@ class ZeroSimStatsController < ApplicationController
   # REST API.
   #
   def sync
-    # Return log string.
-    ret = "API sync<br><br>"
+    # Response JSON.
+    res = {}
 
-    # Get 0 SIM stats.
+    # Access to ZEROSIM server.
     zero_sim_stats = get_zero_sim_stats
     yesterday_used_mb = zero_sim_stats[:yesterday_used_mb]
     month_used_current_mb = zero_sim_stats[:month_used_current_mb]
+    res['is_sync_success'] = yesterday_used_mb.present? && month_used_current_mb.present?
 
-    # Yesterday log.
-    y_log = ZeroSimStat.get_from_date(Time.zone.now.yesterday)
-    y_log.day_used = yesterday_used_mb
-    is_success = y_log.store
-    if is_success
-      ret += "    Yesterday Log: SUCCESS<br>"
-    else
-      ret += "    Yesterday Log: FAILED<br>"
-    end
+    # Store.
+    is_y_ok, is_m_ok = store_sync_data(ZeroSimStat, yesterday_used_mb, month_used_current_mb)
+    res['is_yesterday_store_success'] = is_y_ok
+    res['is_month_store_success'] = is_m_ok
 
-    ret += "<br>"
-
-    # Today log.
-    t_log = ZeroSimStat.get_from_date(Time.zone.now)
-    t_log.month_used_current = month_used_current_mb
-    is_success = t_log.store
-    if is_success
-      ret += "    Today Log: SUCCESS<br>"
-    else
-      ret += "    Today Log: FAILED<br>"
-    end
-
-    # Return string.
-    render text: ret
+    # Render HTML.
+    html = get_sync_result(res)
+    render text: html
   end
 
   # REST API.
   #
   def notify
-    # Get 0 SIM stats.
-    zero_sim_stats = get_zero_sim_stats
+    payload, code, msg, body = notify_latest_data(ZeroSimStat, "zerosim")
 
-    # Payload.
-    datamap = {}
-    datamap["app"] = "sim-stats"
-    datamap["zerosim_month_used_current_mb"] = zero_sim_stats[:month_used_current_mb]
-
-    resd = NotifyFcm.notifyToDeviceData(datamap)
-
-    code = resd.nil? ? 'N/A' : resd.code
-    message = resd.nil? ? 'N/A' : resd.message
-    body = resd.nil? ? 'N/A' : resd.body
-
-    ret = <<-"RET"
-<pre>
-API: notify
-
-DATA: #{datamap}
-
-CODE: #{code}
-MSG: #{message}
-BODY: #{body}
-</pre>
-    RET
-
-    # Return string.
+    # Render HTML
+    ret = get_notify_result(payload, code, msg, body)
     render text: ret
   end
 
