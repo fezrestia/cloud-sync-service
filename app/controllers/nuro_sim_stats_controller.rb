@@ -3,6 +3,19 @@ class NuroSimStatsController < ApplicationController
   include SimStatsCommons
 
   def stats
+    # Total data.
+    @sim_stats = NuroSimStat.getAllLogArray
+    @graph_data_1, @graph_data_2, @graph_data_3 = gen_graph_data(@sim_stats)
+
+    # Param.
+    @limit_mb = 2000
+    @v_max = 2400
+    tick = 0
+    @v_tick = []
+    while tick <= @v_max
+      @v_tick << tick
+      tick += 200
+    end
   end
 
   # REST API.

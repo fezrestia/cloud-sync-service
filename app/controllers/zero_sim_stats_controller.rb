@@ -4,8 +4,13 @@ class ZeroSimStatsController < ApplicationController
 
   def stats
     # Total data.
-    @zero_sim_stats = ZeroSimStat.getAllLogArray
-    @graph_data_1, @graph_data_2, @graph_data_3 = gen_graph_data(@zero_sim_stats)
+    @sim_stats = ZeroSimStat.getAllLogArray
+    @graph_data_1, @graph_data_2, @graph_data_3 = gen_graph_data(@sim_stats)
+
+    # Param.
+    @limit_mb = 500
+    @v_max = 600
+    @v_tick = [0, 100, 200, 300, 400, 500, 600]
   end
 
   # REST API.

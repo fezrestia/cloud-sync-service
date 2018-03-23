@@ -1,94 +1,12 @@
-<p><strong>0 SIM STATS ALL LOG</strong></p>
+<p><strong>ZERO SIM STATS ALL LOG</strong></p>
 
-<table>
-  <tr>
-    <th>Date</th>
-    <th>Day Used</th>
-    <th>Month Used Current</th>
-  </tr>
+<p><%= link_to "CloudSyncService Top", root_path %></p>
 
-  <% @zero_sim_stats.each do |log| %>
-    <tr>
-      <td align="left" ><%= "#{log.year}/#{log.month}/#{log.day}" %></td>
-      <td align="right" ><%= log.day_used %></td>
-      <td align="right" ><%= log.month_used_current %></td>
-    </tr>
-  <% end %>
-</table>
+<hr>
 
-<p>
-  <%= link_to "Cloud Sync Service Root Top", root_path %>
-</p>
+<%= render 'shared/stats_graph' %>
 
-<div>
-  <%= line_chart [ {name: "2 month ago",  data: @graph_data_1},
-                   {name: "Last month",   data: @graph_data_2},
-                   {name: "Now",          data: @graph_data_3} ],
-      id: '0 SIM Log Stats',
-      label: 'Log',
-      xtitle: 'Day',
-      ytitle: 'MB',
-      discrete: true,
-      library: {
-        backgroundColor: 'aliceblue',
-        width: 960,
-        height: 540,
+<hr>
 
-        lineWidth: 2,
-        colors: ['#FFFF7F', '#BFFFBF', '#7FFF7F'],
-        curveType: 'none',
-
-        pointShape: 'circle',
-        pointSize: 0,
-        pointVisible: 'true',
-
-        chartArea: {
-          backgroundColor: 'mintcream',
-          width: 870,
-          height: 440,
-          left: 60,
-          top: 30
-        },
-
-        hAxis: {
-          slantedText: 'true',
-          slantedTextAngle: 90,
-          showTextEvery: 1,
-          textStyle: {
-            color: 'black',
-          }
-
-        },
-
-        vAxis: {
-          baseline: 500,
-          baselineColor: '#FFBF7F',
-          gridlines: {
-            color: 'whitesmoke'
-
-          },
-          ticks: [0, 100, 200, 300, 400, 500, 600],
-          maxValue: 600,
-          minValue: 0,
-          showTextEvery: 1,
-          textStyle: {
-            color: 'black',
-          }
-
-        },
-
-        crosshair: {
-          color: 'cyan',
-          trigger: 'both'
-
-        },
-
-        legend: {
-          position: 'in',
-          alignment: 'start'
-
-        },
-
-    } %>
-</div>
+<%= render 'shared/stats_list' %>
 
