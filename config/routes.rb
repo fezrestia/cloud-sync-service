@@ -4,6 +4,9 @@ Rails.application.routes.draw do
   root 'top#index'
   get '/current_log',   to: 'top#current_log'
 
+  # Total SIM stats.
+  get '/total_sim_stats/latest',    to: 'total_sim_stats#latest', as: 'total_sim_stats'
+
   # Zero SIM stats.
   get '/zero_sim_stats',            to: 'zero_sim_stats#stats',   as: 'zero_sim_stats'
   get '/zero_sim_stats/api/debug',  to: 'zero_sim_stats#debug'

@@ -5,17 +5,27 @@ class DcmSimStatsController < ApplicationController
   def stats
     # Total data.
     @sim_stats = DcmSimStat.getAllLogArray
-    @graph_data_1, @graph_data_2, @graph_data_3 = gen_graph_data(@sim_stats)
+    @data_1, @data_2, @data_3 = gen_graph_data(@sim_stats)
 
     # Param.
-    @limit_mb = 20000
-    @v_max = 24000
+    @chart_id = 'dcm_sim_stats'
+    @mb_range, @mb_limit, @mb_ticks = DcmSimStatsController.get_range_limit_ticks
+  end
+
+  # Get used MB range params.
+  #
+  # @return Int, Int, Int[] Range, limit, and ticks.
+  def self.get_range_limit_ticks
+    range_max = 24000
+    limit_mb = 20000
+    ticks = []
     tick = 0
-    @v_tick = []
-    while tick <= @v_max
-      @v_tick << tick
+    while tick <= range_max
+      ticks << tick
       tick += 2000
     end
+
+    return range_max, limit_mb, ticks
   end
 
   # REST API.

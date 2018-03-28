@@ -5,17 +5,27 @@ class NuroSimStatsController < ApplicationController
   def stats
     # Total data.
     @sim_stats = NuroSimStat.getAllLogArray
-    @graph_data_1, @graph_data_2, @graph_data_3 = gen_graph_data(@sim_stats)
+    @data_1, @data_2, @data_3 = gen_graph_data(@sim_stats)
 
     # Param.
-    @limit_mb = 2000
-    @v_max = 2400
+    @chart_id = 'nuro_sim_stats'
+    @mb_range, @mb_limit, @mb_ticks = NuroSimStatsController.get_range_limit_ticks
+  end
+
+  # Get used MB range params.
+  #
+  # @return Int, Int, Int[] Range, limit, and ticks.
+  def self.get_range_limit_ticks
+    range_max = 2400
+    limit_mb = 2000
+    ticks = []
     tick = 0
-    @v_tick = []
-    while tick <= @v_max
-      @v_tick << tick
+    while tick <= range_max
+      ticks << tick
       tick += 200
     end
+
+    return range_max, limit_mb, ticks
   end
 
   # REST API.

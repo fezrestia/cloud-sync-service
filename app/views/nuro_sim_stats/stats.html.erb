@@ -4,7 +4,15 @@
 
 <hr>
 
-<%= render 'shared/stats_graph' %>
+<%= render 'shared/stats_graph',
+    id: @chart_id,
+    data_1: @data_1,
+    data_2: @data_2,
+    data_3: @data_3,
+    mb_range: @mb_range,
+    mb_limit: @mb_limit,
+    mb_ticks: @mb_ticks
+%>
 
 <hr>
 

@@ -5,12 +5,27 @@ class ZeroSimStatsController < ApplicationController
   def stats
     # Total data.
     @sim_stats = ZeroSimStat.getAllLogArray
-    @graph_data_1, @graph_data_2, @graph_data_3 = gen_graph_data(@sim_stats)
+    @data_1, @data_2, @data_3 = gen_graph_data(@sim_stats)
 
     # Param.
-    @limit_mb = 500
-    @v_max = 600
-    @v_tick = [0, 100, 200, 300, 400, 500, 600]
+    @chart_id = 'zero_sim_stats'
+    @mb_range, @mb_limit, @mb_ticks = ZeroSimStatsController.get_range_limit_ticks
+  end
+
+  # Get used MB range params.
+  #
+  # @return Int, Int, Int[] Range, limit, and ticks.
+  def self.get_range_limit_ticks
+    range_max = 600
+    limit_mb = 500
+    ticks = []
+    tick = 0
+    while tick <= range_max
+      ticks << tick
+      tick += 100
+    end
+
+    return range_max, limit_mb, ticks
   end
 
   # REST API.

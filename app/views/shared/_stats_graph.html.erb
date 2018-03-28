@@ -1,10 +1,10 @@
 <% view_height_px = 540 %>
 
 <div style="height:<%= view_height_px %>px;" >
-  <%= line_chart [ {name: "2 month ago",  data: @graph_data_1},
-                   {name: "Last month",   data: @graph_data_2},
-                   {name: "Now",          data: @graph_data_3} ],
-      id: '0 SIM Log Stats',
+  <%= line_chart [ {name: '2 Month Ago',  data: data_1},
+                   {name: 'Last Month',   data: data_2},
+                   {name: 'Now',          data: data_3} ],
+      id: id,
       label: 'Log',
       xtitle: 'Day',
       ytitle: 'MB',
@@ -41,14 +41,14 @@
         },
 
         vAxis: {
-          baseline: @limit_mb,
+          baseline: mb_limit,
           baselineColor: '#FFBF7F',
           gridlines: {
             color: 'whitesmoke'
 
           },
-          ticks: @v_tick,
-          maxValue: @v_max,
+          ticks: mb_ticks,
+          maxValue: mb_range,
           minValue: 0,
           showTextEvery: 1,
           textStyle: {
