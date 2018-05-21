@@ -40,17 +40,41 @@ module SimStatsCommons extend self
 
     # Graph 1.
     logs_1 = total_stats.select { |log| (log.year == prev2_year) && (log.month == prev2_month) }
-    graph_data_1 = logs_1.map { |log| ["#{log.day}", "#{log.month_used_current}"] }
+    graph_data_1 = convert_to_graph_data(logs_1)
 
     # Graph 2.
     logs_2 = total_stats.select { |log| (log.year == prev1_year) && (log.month == prev1_month) }
-    graph_data_2 = logs_2.map { |log| ["#{log.day}", "#{log.month_used_current}"] }
+    graph_data_2 = convert_to_graph_data(logs_2)
 
     # Graph 3.
     logs_3 = total_stats.select { |log| (log.year == latest_year) && (log.month == latest_month) }
-    graph_data_3 = logs_3.map { |log| ["#{log.day}", "#{log.month_used_current}"] }
+    graph_data_3 = convert_to_graph_data(logs_3)
 
     return graph_data_1, graph_data_2, graph_data_3
+  end
+
+  def convert_to_graph_data(logs)
+    graph_data = [] # Result.
+
+    first_day = logs.first.day
+    1.upto(first_day - 1) { |d|
+      graph_data << [d, nil]
+    }
+
+    last_val = 0
+    logs.each { |log|
+      day = log.day
+      cur_val = log.month_used_current
+
+      cur_val = 0 if cur_val.nil?
+
+      if cur_val >= last_val
+        graph_data << [day, cur_val]
+        last_val = cur_val
+      end
+    } # logs.each
+
+    return graph_data
   end
 
   # Store sync data and return response.
