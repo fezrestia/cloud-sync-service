@@ -42,6 +42,14 @@ class DcmSimStatsController < ApplicationController
 
     # Access to DCM server.
     status, month_used, yesterday_used = get_dcm_sim_stats
+
+    # DEBUG LOG
+#    puts "## status = #{status}"
+#    puts "## month_used = #{month_used}"
+#    puts "## yesterday_used = #{yesterday_used}"
+#    render text: "DONE"
+#    return
+
     res['is_sync_success'] = status
 
     # Store.
@@ -99,36 +107,70 @@ class DcmSimStatsController < ApplicationController
         links.each { |link|
           href = link.attributes['href'].value
           url = URI.unescape(href)
+#          puts "## available url = #{url}"
           login_url = url if url.include?(DCM_TOP_URL)
         }
 
         !login_url.nil? # OK/NG of block.
       } # get_with_retry
 
+#      puts "## Login URL = #{login_url}"
+
       return false, INVALID_VALUE, INVALID_VALUE if !is_success
 
       # Get login page.
       session.visit(login_url)
 
-      submit_button = nil
+      next_button = nil
       is_success = get_with_retry {
         begin
           if session.has_text?(ENV['IN_DCM_NETWORK_INDICATOR'])
             # In DCM network.
+
+            # TODO:
+
             pass_input = session.find('input#Di_Pass')
             pass_input.native.send_key(ENV['DCM_NETWORK_PIN'])
           else
             # In public network.
             id_input = session.find('input#Di_Uid')
             id_input.native.send_key(ENV['DCM_ID'])
-            pass_input = session.find('input#Di_Pass')
-            pass_input.native.send_key(ENV['DCM_PASS'])
           end
-          submit_button = session.find('input.button_submit.nextaction')
+          next_button = session.find('input.button_submit.nextaction')
 
           true # OK of block.
         rescue Capybara::ElementNotFound => e
-          puts "## login page element not found, retry."
+          puts "## login page (id) element not found, retry."
+
+          false # NG of blck.
+        end # begin
+      } # get_with_retry
+
+      return false, INVALID_VALUE, INVALID_VALUE if !is_success
+
+      # Get next page.
+      next_button.trigger('click')
+
+      login_button = nil
+      is_success = get_with_retry {
+        begin
+          if session.has_text?(ENV['IN_DCM_NETWORK_INDICATOR'])
+            # In DCM network.
+
+            # TODO:
+
+            pass_input = session.find('input#Di_Pass')
+            pass_input.native.send_key(ENV['DCM_NETWORK_PIN'])
+          else
+            # In public network.
+            pass_input = session.find('input#Di_Pass')
+            pass_input.native.send_key(ENV['DCM_PASS'])
+          end
+          login_button = session.find('input.button_submit.nextaction')
+
+          true # OK of block.
+        rescue Capybara::ElementNotFound => e
+          puts "## login page (pass) element not found, retry."
 
           false # NG of blck.
         end # begin
@@ -137,7 +179,7 @@ class DcmSimStatsController < ApplicationController
       return false, INVALID_VALUE, INVALID_VALUE if !is_success
 
       # Get data page.
-      submit_button.trigger('click')
+      login_button.trigger('click')
 
       month_used_current = nil
       yesterday_used = nil
