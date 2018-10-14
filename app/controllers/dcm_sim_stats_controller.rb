@@ -217,8 +217,8 @@ class DcmSimStatsController < ApplicationController
       return is_success, month_used_current, yesterday_used
     end
 
-    MAX_PARSE_RETRY_COUNT = 3
-    RETRY_WAIT_SEC = 3
+    MAX_PARSE_RETRY_COUNT = 10
+    RETRY_WAIT_SEC = 1
 
     def get_with_retry
       raise "No block given." if !block_given?
