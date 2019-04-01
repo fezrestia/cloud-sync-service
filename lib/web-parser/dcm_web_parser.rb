@@ -212,6 +212,11 @@ class DcmWebParser < WebParserBase
 
       doc = Nokogiri::HTML.parse(session.html)
 
+      if IS_DEBUG
+        puts "#### data page"
+        puts doc
+      end
+
       month_used = doc.
           css('section#mydcm_data_month').
           css('div#mydcm_data_month-02').

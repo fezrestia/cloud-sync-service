@@ -2,7 +2,7 @@ class WebParserBase
   require 'capybara/poltergeist'
   require 'uri'
 
-  MAX_PARSE_RETRY_COUNT = 10
+  MAX_PARSE_RETRY_COUNT = 30
   RETRY_WAIT_SEC = 1
 
   INVALID_VALUE = -1
