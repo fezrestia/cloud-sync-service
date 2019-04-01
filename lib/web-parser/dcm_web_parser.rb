@@ -92,6 +92,8 @@ class DcmWebParser < WebParserBase
         !month_used.nil? && !yesterday_used.nil?
       }
 
+      return false, INVALID_VALUE, INVALID_VALUE if !is_success
+
       puts "## Month Used = #{month_used} GB"
       puts "## Yesterday Used = #{yesterday_used} GB"
 
