@@ -43,6 +43,10 @@ class WebParserBase
       count += 1
     end # while
 
+    if count == MAX_PARSE_RETRY_COUNT
+      puts "## Error : Max retry count over."
+    end
+
     return is_ok
   end
 

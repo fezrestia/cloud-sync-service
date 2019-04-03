@@ -218,8 +218,8 @@ class DcmWebParser < WebParserBase
       end
 
       month_used = doc.
-          css('section#mydcm_data_month').
-          css('div#mydcm_data_month-02').
+          css('section#mydcm_data_data').
+          css('div.in-data-use').
           css('span.card-t-number').
           text
       month_used = nil if month_used.empty?
