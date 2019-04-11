@@ -10,7 +10,7 @@ module.exports = (env, argv) => {
     return {
         entry: path.resolve(__dirname, "src/entry.ts"),
         output: {
-            path: path.resolve(__dirname, "public"),
+            path: path.resolve(__dirname, "dst"),
             filename: "entry.js",
         },
 
