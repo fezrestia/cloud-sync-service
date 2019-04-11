@@ -1,8 +1,12 @@
+const ENV = "development";
+//const ENV = "production";
+
+const isDebug = ENV === "development";
+
 const path = require('path')
 
 module.exports = {
-    mode: "development",
-//    mode: "production",
+    mode: ENV,
 
     entry: path.resolve(__dirname, "src/entry.ts"),
 
@@ -16,12 +20,27 @@ module.exports = {
             {
                 test: /\.ts$/, // ext = .ts
                 use: "ts-loader", // compile .ts
-            }
-        ]
+            },
+            {
+                test: /\.css$/, // ext = .css
+                use: [ // will apply from end to top
+                    {
+                        loader: "style-loader",
+                    },
+                    {
+                        loader: "css-loader",
+                        options: {
+                            url: false,
+                            sourceMap: isDebug,
+                        },
+                    },
+                ],
+            },
+        ],
     },
 
     resolve: {
-        extensions: [".ts"] // Resolve .ts extension for import.
+        extensions: [".js", ".ts"],
     },
 
 };
