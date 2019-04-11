@@ -1,4 +1,4 @@
-import "./entry.css";
+import "./entry.scss";
 
 console.log("HELLO WORLD !");
 

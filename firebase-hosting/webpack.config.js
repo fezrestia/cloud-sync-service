@@ -30,7 +30,33 @@ module.exports = {
                     {
                         loader: "css-loader",
                         options: {
-                            url: false,
+                            url: false, // Ignore url() method in .scss
+                            sourceMap: isDebug,
+                        },
+                    },
+                ],
+            },
+            {
+                test: /\.scss$/, // ext = .scss
+                use: [ // will apply from end to top
+                    {
+                        loader: "style-loader",
+                    },
+                    {
+                        loader: "css-loader",
+                        options: {
+                            url: false, // Ignore url() method in .scss
+                            sourceMap: isDebug,
+
+                            // 0 : No loader (default)
+                            // 1 : postcss-loader
+                            // 2 : postcss-loader, sass-loader
+                            importLoaders: 2,
+                        },
+                    },
+                    {
+                        loader: "sass-loader",
+                        options: {
                             sourceMap: isDebug,
                         },
                     },
