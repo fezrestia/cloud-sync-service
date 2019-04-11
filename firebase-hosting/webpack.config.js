@@ -2,16 +2,24 @@ const path = require("path");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin"); // Extract CSS from JS.
 const OptimizeCssAssetsWebpackPlugin = require("optimize-css-assets-webpack-plugin"); // Compress CSS.
 const TerserWebpackPlugin = require("terser-webpack-plugin"); // Compress JS.
+const HtmlWebpackPlugin = require("html-webpack-plugin"); // Render HTML.
+const CopyWebpackPlugin = require("copy-webpack-plugin"); // Copy static assets.
+const CleanWebpackPlugin = require("clean-webpack-plugin"); // Clean.
 
 module.exports = (env, argv) => {
     // Environment.
     isDebug = argv.mode === "development";
 
+    dstDir = "dst";
+    dstPath = path.resolve(__dirname, dstDir);
+    filenameJS = "entry-[hash].js";
+    filenameCSS = "entry-[hash].css";
+
     return {
         entry: path.resolve(__dirname, "src/entry.ts"),
         output: {
-            path: path.resolve(__dirname, "dst"),
-            filename: "entry.js",
+            path: dstPath,
+            filename: filenameJS,
         },
 
         // Override optimization options.
@@ -53,6 +61,12 @@ module.exports = (env, argv) => {
                         },
                     ],
                 },
+
+                // HTML.
+                {
+                    test: /\.html$/, // ext = .html
+                    use: "html-loader",
+                },
             ],
         },
 
@@ -61,9 +75,24 @@ module.exports = (env, argv) => {
         },
 
         plugins: [
+            new CleanWebpackPlugin(),
             new MiniCssExtractPlugin( {
-                filename: "entry.css",
+                filename: filenameCSS,
             } ),
+            new HtmlWebpackPlugin( {
+                template: "src/entry.html",
+                filename: "entry.html",
+                files: {
+                    "js": [filenameJS],
+                    "css": [filenameCSS],
+                },
+            } ),
+            new CopyWebpackPlugin( [
+                {
+                    from: "src/static/",
+                    to: "",
+                },
+            ] ),
         ],
 
         devtool: 'inline-source-map',
