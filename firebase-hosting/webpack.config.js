@@ -5,7 +5,8 @@ const isDebug = ENV === "development";
 
 const path = require('path')
 
-module.exports = {
+module.exports = (env, argv) => ({
+
     mode: ENV,
 
     entry: path.resolve(__dirname, "src/entry.ts"),
@@ -69,5 +70,5 @@ module.exports = {
         extensions: [".js", ".ts"],
     },
 
-};
+});
 
