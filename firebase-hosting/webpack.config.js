@@ -1,74 +1,72 @@
-const ENV = "development";
-//const ENV = "production";
+const path = require("path");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin"); // Extract CSS from JS.
+const OptimizeCssAssetsWebpackPlugin = require("optimize-css-assets-webpack-plugin"); // Compress CSS.
+const TerserWebpackPlugin = require("terser-webpack-plugin"); // Compress JS.
 
-const isDebug = ENV === "development";
+module.exports = (env, argv) => {
+    // Environment.
+    isDebug = argv.mode === "development";
 
-const path = require('path')
+    return {
+        entry: path.resolve(__dirname, "src/entry.ts"),
+        output: {
+            path: path.resolve(__dirname, "public"),
+            filename: "entry.js",
+        },
 
-module.exports = (env, argv) => ({
+        // Override optimization options.
+        optimization: {
+            minimizer: [
+                new TerserWebpackPlugin({}),
+                new OptimizeCssAssetsWebpackPlugin({}),
+            ],
+        },
 
-    mode: ENV,
+        module: {
+            rules: [
+                // TypeScript.
+                {
+                    test: /\.ts$/, // ext = .ts
+                    use: "ts-loader", // compile .ts
+                },
 
-    entry: path.resolve(__dirname, "src/entry.ts"),
-
-    output: {
-        path: path.resolve(__dirname, "public"),
-        filename: "entry.js",
-    },
-
-    module: {
-        rules: [
-            {
-                test: /\.ts$/, // ext = .ts
-                use: "ts-loader", // compile .ts
-            },
-            {
-                test: /\.css$/, // ext = .css
-                use: [ // will apply from end to top
-                    {
-                        loader: "style-loader",
-                    },
-                    {
-                        loader: "css-loader",
-                        options: {
-                            url: false, // Ignore url() method in .scss
-                            sourceMap: isDebug,
+                // CSS/SCSS/SASS.
+                {
+                    test: /\.(c|sc|sa)ss$/, // ext = .css/.scss/.sass
+                    use: [ // will apply from end to top
+                        {
+                            loader: MiniCssExtractPlugin.loader,
                         },
-                    },
-                ],
-            },
-            {
-                test: /\.scss$/, // ext = .scss
-                use: [ // will apply from end to top
-                    {
-                        loader: "style-loader",
-                    },
-                    {
-                        loader: "css-loader",
-                        options: {
-                            url: false, // Ignore url() method in .scss
-                            sourceMap: isDebug,
+                        {
+                            loader: "css-loader",
+                            options: {
+                                url: false, // Ignore url() method in .scss
 
-                            // 0 : No loader (default)
-                            // 1 : postcss-loader
-                            // 2 : postcss-loader, sass-loader
-                            importLoaders: 2,
+                                // 0 : No loader (default)
+                                // 1 : postcss-loader
+                                // 2 : postcss-loader, sass-loader
+                                importLoaders: 2,
+                            },
                         },
-                    },
-                    {
-                        loader: "sass-loader",
-                        options: {
-                            sourceMap: isDebug,
+                        {
+                            loader: "sass-loader",
                         },
-                    },
-                ],
-            },
+                    ],
+                },
+            ],
+        },
+
+        resolve: {
+            extensions: [".js", ".ts"],
+        },
+
+        plugins: [
+            new MiniCssExtractPlugin( {
+                filename: "entry.css",
+            } ),
         ],
-    },
 
-    resolve: {
-        extensions: [".js", ".ts"],
-    },
+        devtool: 'inline-source-map',
 
-});
-
+    }; // return
+};
