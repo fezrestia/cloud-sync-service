@@ -1,11 +1,15 @@
 {
     "compilerOptions": {
         "sourceMap": true,
-        "target": "es5",
-        "module": "es2015",
+        "target": "es6",
+        "module": "ESNext",
         "jsx": "react",
         "moduleResolution": "node",
+        "allowSyntheticDefaultImports": true,
         "noImplicitAny": false
-    }
+    },
+    "exclude": [
+        "node_modules"
+    ]
 }
 
