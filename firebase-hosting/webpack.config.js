@@ -34,7 +34,7 @@ module.exports = (env, argv) => {
             rules: [
                 // TypeScript.
                 {
-                    test: /\.ts$/, // ext = .ts
+                    test: /\.(ts|tsx)$/, // ext = .ts/.tsx
                     use: "ts-loader", // compile .ts
                 },
 
@@ -71,7 +71,7 @@ module.exports = (env, argv) => {
         },
 
         resolve: {
-            extensions: [".js", ".ts"],
+            extensions: [".js", ".ts", ".tsx", ".json"],
         },
 
         plugins: [

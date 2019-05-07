@@ -2,8 +2,13 @@
   "name": "cloud-sync-service",
   "version": "1.0.0",
   "description": "CloudSyncService",
-  "dependencies": {},
+  "dependencies": {
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6"
+  },
   "devDependencies": {
+    "@types/react": "^16.8.13",
+    "@types/react-dom": "^16.8.4",
     "clean-webpack-plugin": "^2.0.1",
     "copy-webpack-plugin": "^5.0.2",
     "css-loader": "^2.1.1",
