@@ -2,6 +2,6 @@ import * as React from "react";
 
 export default function() {
     return (
-        <h2>Wow</h2>
+        <h1>TEMPLATE</h1>
     );
 }
