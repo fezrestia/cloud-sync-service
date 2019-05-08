@@ -7,3 +7,7 @@ render(
   <App message="WORLD" />,
   document.getElementById("root"),
 );
+
+import { sum } from "./components/Module";
+
+console.log(sum(1, 2).toString());
