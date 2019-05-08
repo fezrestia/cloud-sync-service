@@ -14,4 +14,11 @@ module.exports = {
         "json",
         "node",
     ],
+    "moduleNameMapper": {
+        "\.(css|jpg|png)$": "<rootDir>/src/empty-module.js"
+    },
+    "collectCoverageFrom": [
+        "src/**/*.{ts,tsx}",
+        "!src/**/*.{test,spec}.{ts,tsx}"
+    ]
 }

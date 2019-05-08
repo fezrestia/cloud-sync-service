@@ -1,5 +1,6 @@
 import Button from "antd/lib/button";
 import React from "react";
+import Wow from "./Wow";
 
 import "antd/lib/button/style/css";
 
@@ -12,6 +13,7 @@ export default function({ message }: IAppProps) {
     <div>
       <h1>Hello {message}</h1>;
       <Button type="primary">Test</Button>
+      <Wow />
     </div>
   );
 }
