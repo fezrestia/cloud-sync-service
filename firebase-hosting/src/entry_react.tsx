@@ -4,7 +4,6 @@ import { render } from "react-dom";
 import App from "./components/App";
 
 render(
-    <App message="WORLD" />,
-    document.getElementById("root"),
+  <App message="WORLD" />,
+  document.getElementById("root"),
 );
-
