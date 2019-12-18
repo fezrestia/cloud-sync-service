@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 # Ruby version.
-ruby '2.3.1'
+ruby '2.6.3'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails'
@@ -9,7 +9,7 @@ gem 'rails'
 
 # SQLite3 database.
 group :development, :test do
-  gem 'sqlite3'
+  gem 'sqlite3', '~> 1.3.6'
 end
 
 # MySQL2 database for Google Cloud SQL.
@@ -26,7 +26,7 @@ end
 gem 'mechanize'
 
 # Draw graph.
-gem 'chartkick'
+gem 'chartkick', '>= 3.3.0'
 
 gem 'rails-ujs'
 
@@ -36,6 +36,10 @@ gem 'poltergeist'
 
 # Add log.
 gem 'rails_12factor'
+
+# Lock version.
+gem 'nokogiri', '>= 1.10.4'
+gem 'loofah', '>= 2.3.1'
 
 
 
