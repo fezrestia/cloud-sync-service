@@ -28,3 +28,8 @@ doc/
 .DS_Store
 .idea
 
+# Ignore precompiled javascript.
+/public/packs
+/public/packs-test
+/public/assets
+
