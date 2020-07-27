@@ -3,13 +3,14 @@ source 'https://rubygems.org'
 # Ruby version.
 ruby '2.7.1'
 
-# Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.0.0'
+# Rails version.
+gem 'rails', '~> 5.0'
+
 
 
 # SQLite3 database.
 group :development, :test do
-  gem 'sqlite3', '~> 1.3.6'
+  gem 'sqlite3', '>= 1.3.6'
 end
 
 # MySQL2 database for Google Cloud SQL.
