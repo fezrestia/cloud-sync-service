@@ -1,0 +1,8 @@
+node_modules/
+log/
+tmp/
+.git
+.gitignore
+.gcloudignore
+.env_secrets.yml
+
