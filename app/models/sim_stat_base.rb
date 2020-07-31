@@ -119,27 +119,5 @@ class SimStatBase
     return log
   end
 
-  # Store this log.
-  #
-  # @return Success or not.
-  def store
-    # Path.
-    date_path = "y#{@year}/m#{@month}/d#{@day}"
-    ext = '.json'
-    full_path = self.class.get_firebase_db_root + date_path + ext
-
-    # Data.
-    data = {}
-    data['day_used'] = @day_used
-    data['month_used_current'] = @month_used_current
-    json = JSON.generate(data)
-
-    # HTTP.
-    response = Https.put(full_path, json)
-
-    # Web API return.
-    return response.code == '200'
-  end
-
 end
 

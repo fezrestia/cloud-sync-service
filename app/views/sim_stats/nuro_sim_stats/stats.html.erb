@@ -1,0 +1,24 @@
+<p><strong>NURO SIM STATS ALL LOG</strong></p>
+
+<p><%= link_to "Cloud Sync Service TOP", root_root_path %></p>
+
+<hr>
+
+<div id="chart_area" ></div>
+
+<hr>
+
+<%= render 'sim_stats/shared/stats_list' %>
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<%= javascript_pack_tag 'sim_stats' %>
+<script type="text/javascript" >
+  renderTimelineStats(
+      "chart_area",
+      <%= @data_table.to_json %>,
+      <%= @mb_range %>,
+      <%= @mb_limit %>,
+      <%= @mb_ticks.to_json %>,
+      <%= @day_ticks.to_json %> );
+</script>
+

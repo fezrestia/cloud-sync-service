@@ -1,0 +1,47 @@
+<strong>TOTAL SIM STATS</strong>
+
+<hr>
+
+<p>DCM SIM STATS</p>
+<div id="dcm_chart_area" ></div>
+
+<hr>
+
+<p>NURO SIM STATS</p>
+<div id="nuro_chart_area" ></div>
+
+<hr>
+
+<p>ZERO SIM STATS</p>
+<div id="zerosim_chart_area" ></div>
+
+<hr>
+
+<p><%= link_to "Cloud Sync Service TOP", root_root_path %></p>
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<%= javascript_pack_tag 'sim_stats' %>
+<script type="text/javascript" >
+  renderTimelineStats(
+      "dcm_chart_area",
+      <%= @dcm_data_table.to_json %>,
+      <%= @dcm_mb_range %>,
+      <%= @dcm_mb_limit %>,
+      <%= @dcm_mb_ticks.to_json %>,
+      <%= @day_ticks.to_json %> );
+  renderTimelineStats(
+      "nuro_chart_area",
+      <%= @nuro_data_table.to_json %>,
+      <%= @nuro_mb_range %>,
+      <%= @nuro_mb_limit %>,
+      <%= @nuro_mb_ticks.to_json %>,
+      <%= @day_ticks.to_json %> );
+  renderTimelineStats(
+      "zerosim_chart_area",
+      <%= @zerosim_data_table.to_json %>,
+      <%= @zerosim_mb_range %>,
+      <%= @zerosim_mb_limit %>,
+      <%= @zerosim_mb_ticks.to_json %>,
+      <%= @day_ticks.to_json %> );
+</script>
+
