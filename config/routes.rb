@@ -3,7 +3,6 @@ Rails.application.routes.draw do
 
   # Root.
   get '/', to: 'root#root', as: 'root_root'
-  get '/current_log', to: 'root#current_log', as: 'root_current_log'
 
   # SIM stats.
   namespace :sim_stats do
