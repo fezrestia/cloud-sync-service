@@ -4,25 +4,34 @@ class RootController < ApplicationController
     @error_logs = ErrorLog.all.load
   end
 
-  def delete_error_log
-    id = param_error_log_id
-    log = ErrorLog.find(id)
+  def trigger_watch_dog
 
-    log.delete
+    # TODO: Check internal server status.
 
+    ErrorLog.log('Watch Dog Timer', 'OK')
+  end
+
+  def trigger_watch_dog_and_reload
+    trigger_watch_dog
     redirect_to root_root_path
   end
 
+  def delete_error_log
+    id = params[:id]
+    begin
+      log = ErrorLog.find(id)
+      log.delete
+    rescue => e
+      ErrorLog.log_exception(e)
+    end
+  end
 
+  def delete_error_log_and_reload
+    delete_error_log
+    redirect_to root_root_path
+  end
 
   private
-
-    def param_error_log_id
-      return params[:error_log_id]
-    end
-
-
-
   # private
 
 end

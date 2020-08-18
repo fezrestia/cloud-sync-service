@@ -25,6 +25,10 @@
 
 <h3><strong>Error Logs</strong></h3>
 
+<p>
+  <%= button_to 'Drive Watch Dog', trigger_watch_dog_and_reload_path, { :method => :get } %>
+</p>
+
 <% if @error_logs.empty? %>
   NO ERROR
 <% else %>
@@ -32,7 +36,7 @@
     <% @error_logs.each { |error_log| %>
       <tr>
         <td>
-          <%= button_to 'DEL', { :controller => 'root', :action => 'delete_error_log' }, { :method => :post, :params => { :error_log_id => error_log.id } } %>
+          <%= button_to 'DEL', delete_error_log_and_reload_path( { :id => error_log.id } ), { :method => :get } %>
         </td>
         <td>
           <%= error_log.title %>

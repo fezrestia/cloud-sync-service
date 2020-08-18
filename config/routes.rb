@@ -4,8 +4,13 @@ Rails.application.routes.draw do
   # Root.
   get '/', to: 'root#root', as: 'root_root'
 
+  # Watch dog.
+  post  '/trigger_watch_dog', to: 'root#trigger_watch_dog'
+  get   '/trigger_watch_dog', to: 'root#trigger_watch_dog_and_reload',  as: 'trigger_watch_dog_and_reload'
+
   # Error Logs.
-  post '/delete_error_log', to: 'root#delete_error_log', as: 'delete_error_log'
+  post  '/delete_error_log',      to: 'root#delete_error_log'
+  get   '/delete_error_log/:id',  to: 'root#delete_error_log_and_reload',  as: 'delete_error_log_and_reload'
 
   # SIM stats.
   namespace :sim_stats do
