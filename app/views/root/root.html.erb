@@ -23,5 +23,34 @@
 
 
 
+<h3><strong>Error Logs</strong></h3>
+
+<% if @error_logs.empty? %>
+  NO ERROR
+<% else %>
+  <table nowrap ><tbody>
+    <% @error_logs.each { |error_log| %>
+      <tr>
+        <td>
+          <%= button_to 'DEL', { :controller => 'root', :action => 'delete_error_log' }, { :method => :post, :params => { :error_log_id => error_log.id } } %>
+        </td>
+        <td>
+          <%= error_log.title %>
+        </td>
+        <td>
+          <% error_log.body.split("\n").each { |line| %>
+            <%= line %><br>
+          <% } %>
+        </td>
+        <td>
+          <%= error_log.when %>
+        </td>
+      </tr>
+    <% } %>
+  </tbody></table>
+<% end %>
+
+
+
 <%= javascript_pack_tag 'root' %>
 

@@ -4,6 +4,9 @@ Rails.application.routes.draw do
   # Root.
   get '/', to: 'root#root', as: 'root_root'
 
+  # Error Logs.
+  post '/delete_error_log', to: 'root#delete_error_log', as: 'delete_error_log'
+
   # SIM stats.
   namespace :sim_stats do
     get '/total_sim_stats/latest',    to: 'total_sim_stats#latest', as: 'total'
