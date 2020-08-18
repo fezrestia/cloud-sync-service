@@ -18,11 +18,15 @@ class RootController < ApplicationController
 
   def delete_error_log
     id = params[:id]
-    begin
-      log = ErrorLog.find(id)
-      log.delete
-    rescue => e
-      ErrorLog.log_exception(e)
+    if id.present? && id.to_i == DELETE_ALL_ID
+      ErrorLog.all.delete_all
+    else
+      begin
+        log = ErrorLog.find(id)
+        log.delete
+      rescue => e
+        ErrorLog.log_exception(e)
+      end
     end
   end
 
