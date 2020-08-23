@@ -1,5 +1,22 @@
 <h3><strong>CLOUD SYNC SERVICE</strong></h3>
 
+<h3><strong>Current Status</strong></h3>
+
+<table class="no-border" ><tbody>
+  <tr>
+    <td nowrap >SQL Database</td>
+    <td nowrap >
+      <% if IS_DB_ENABLED %>
+        Enabled
+      <% else %>
+        Disabled
+      <% end %>
+    </td>
+  </tr>
+</tbody></table>
+
+
+
 <h3><strong>SIM Stats</strong></h3>
 
 <table class="no-border" data-turbolinks="false" ><tbody>
@@ -23,44 +40,46 @@
 
 
 
-<h3><strong>Error Logs</strong></h3>
+<% if IS_DB_ENABLED %>
+  <h3><strong>Error Logs</strong></h3>
 
-<p>
-  <table class="no-border-less-padding" ><tbody>
-    <tr>
-      <td>
-        <%= button_to 'Drive Watch Dog', trigger_watch_dog_and_reload_path, { :method => :get } %>
-      </td>
-      <td>
-        <%= button_to 'Delete ALL', delete_error_log_and_reload_path( { :id => DELETE_ALL_ID } ), { :method => :get } %>
-      </td>
-    </tr>
-  </tbody></table>
-</p>
-
-<% if @error_logs.empty? %>
-  NO ERROR
-<% else %>
-  <table ><tbody>
-    <% @error_logs.each { |error_log| %>
+  <p>
+    <table class="no-border-less-padding" ><tbody>
       <tr>
-        <td nowrap >
-          <%= button_to 'DEL', delete_error_log_and_reload_path( { :id => error_log.id } ), { :method => :get } %>
+        <td>
+          <%= button_to 'Drive Watch Dog', trigger_watch_dog_and_reload_path, { :method => :get } %>
         </td>
-        <td nowrap >
-          <%= error_log.title %>
-        </td>
-        <td nowrap >
-          <% error_log.body.split("\n").each { |line| %>
-            <%= line %><br>
-          <% } %>
-        </td>
-        <td nowrap >
-          <%= error_log.when %>
+        <td>
+          <%= button_to 'Delete ALL', delete_error_log_and_reload_path( { :id => DELETE_ALL_ID } ), { :method => :get } %>
         </td>
       </tr>
-    <% } %>
-  </tbody></table>
+    </tbody></table>
+  </p>
+
+  <% if @error_logs.empty? %>
+    NO ERROR
+  <% else %>
+    <table ><tbody>
+      <% @error_logs.each { |error_log| %>
+        <tr>
+          <td nowrap >
+            <%= button_to 'DEL', delete_error_log_and_reload_path( { :id => error_log.id } ), { :method => :get } %>
+          </td>
+          <td nowrap >
+            <%= error_log.title %>
+          </td>
+          <td nowrap >
+            <% error_log.body.split("\n").each { |line| %>
+              <%= line %><br>
+            <% } %>
+          </td>
+          <td nowrap >
+            <%= error_log.when %>
+          </td>
+        </tr>
+      <% } %>
+    </tbody></table>
+  <% end %>
 <% end %>
 
 

@@ -1,7 +1,11 @@
 class RootController < ApplicationController
 
   def root
-    @error_logs = ErrorLog.all.load
+    if IS_DB_ENABLED
+      @error_logs = ErrorLog.all.load
+    else
+      @error_logs = []
+    end
   end
 
   def trigger_watch_dog
