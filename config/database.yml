@@ -25,8 +25,8 @@ production:
   encoding: unicode
   pool: 5
   timeout: 5000
-  username: <%= ENV.fetch("DATABASE_USER") %>
-  password: <%= ENV.fetch("DATABASE_PASS") %>
+  username: <%= ENV.fetch("DATABASE_USER") { "default_database_user" } %>
+  password: <%= ENV.fetch("DATABASE_PASS") { "default_database_pass" } %>
   database: cloud-sync-database
-  host: <%= ENV.fetch("DATABASE_HOST") %>
+  host: <%= ENV.fetch("DATABASE_HOST") { "default_database_host" } %>
 
